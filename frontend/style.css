@@ -1,0 +1,49 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdfbf7;
+    color: #444;
+    padding: 40px;
+}
+
+h1 {
+    color: #7ab8bf;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+
+#vitrine-produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card-produto {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    border: 2px solid #f0f0f0;
+}
+
+.card-produto:hover {
+    transform: translateY(-5px);
+    border-color: #7ab8bf;
+}
+
+.card-produto h3 {
+    color: #555;
+    margin-top: 0;
+}
+
+.badge-idade {
+    background-color: #e8f4f5;
+    color: #7ab8bf;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}

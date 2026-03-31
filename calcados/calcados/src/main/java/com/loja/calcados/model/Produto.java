@@ -11,7 +11,8 @@ public class Produto {
     @Id // 2. MÁGICA: Diz que o ID é a Chave Primária
     @GeneratedValue(strategy = GenerationType.IDENTITY) // O banco de dados vai gerar o número (1, 2, 3...) sozinho
     private Long id;
-
+    private Double preco;
+    private String imagemUrl;
     private String nome;
     private String descricao;
     private String categoriaFaixaEtaria;
@@ -54,4 +55,40 @@ public class Produto {
     public String getDescricao() { return descricao; }
     public String getCategoriaFaixaEtaria() { return categoriaFaixaEtaria; }
     public List<ProdutoVariacao> getVariacoes() { return variacoes; }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
+
+    public String getImagemUrl() {
+        return imagemUrl;
+    }
+
+    public void setImagemUrl(String imagemUrl) {
+        this.imagemUrl = imagemUrl;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setCategoriaFaixaEtaria(String categoriaFaixaEtaria) {
+        this.categoriaFaixaEtaria = categoriaFaixaEtaria;
+    }
+
+    public void setVariacoes(List<ProdutoVariacao> variacoes) {
+        this.variacoes = variacoes;
+    }
 }
