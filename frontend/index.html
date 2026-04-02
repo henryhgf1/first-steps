@@ -9,12 +9,28 @@
   <body>
     <div class="header-loja">
       <h2>👟 MiniPassos</h2>
-      <div class="carrinho-icone">🛒 <span id="contador-carrinho">0</span></div>
+
+      <div class="carrinho-icone" onclick="abrirModal()">
+        🛒 <span id="contador-carrinho">0</span>
+      </div>
     </div>
     <h1>Lançamentos</h1>
 
     <div id="vitrine-produtos"></div>
 
+    <div id="modal-carrinho" class="modal-escondido">
+      <div class="modal-conteudo">
+        <span class="fechar-modal" onclick="fecharModal()">&times;</span>
+        <h2>Seu Carrinho 🛒</h2>
+
+        <div id="lista-itens-carrinho"></div>
+
+        <button class="btn-finalizar" onclick="finalizarCompra()">
+          Confirmar no WhatsApp
+        </button>
+      </div>
+    </div>
+    <div id="toast" class="toast-escondido">Mensagem vai aqui</div>
     <script src="/src/js/app.js"></script>
   </body>
 </html>
