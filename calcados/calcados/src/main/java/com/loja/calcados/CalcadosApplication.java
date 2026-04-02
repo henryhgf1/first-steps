@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CalcadosApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CalcadosApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CalcadosApplication.class, args);
+    }
 
 }

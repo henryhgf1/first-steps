@@ -1,49 +1,151 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fdfbf7;
-    color: #444;
-    padding: 40px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fdfbf7;
+  color: #444;
+  padding: 40px;
 }
 
 h1 {
-    color: #7ab8bf;
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 40px;
+  color: #7ab8bf;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
 }
 
 #vitrine-produtos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .card-produto {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease;
-    border: 2px solid #f0f0f0;
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  border: 2px solid #f0f0f0;
+  max-width: 350px;
+  margin: 0 auto;
 }
 
 .card-produto:hover {
-    transform: translateY(-5px);
-    border-color: #7ab8bf;
+  transform: translateY(-5px);
+  border-color: #7ab8bf;
 }
 
 .card-produto h3 {
-    color: #555;
-    margin-top: 0;
+  color: #555;
+  margin-top: 0;
 }
 
 .badge-idade {
-    background-color: #e8f4f5;
-    color: #7ab8bf;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.85rem;
-    font-weight: bold;
+  background-color: #e8f4f5;
+  color: #7ab8bf;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+/* --- ESTILOS DO PAINEL ADMIN --- */
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.form-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.input-form {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-salvar {
+  background: #7ab8bf;
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.btn-salvar:hover {
+  background: #5a9ca3;
+}
+
+/* --- ESTILO DO BOTÃO COMPRAR --- */
+.btn-comprar {
+  background-color: #28a745; /* Verde de conversão/sucesso */
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    transform 0.1s ease;
+}
+
+/* Efeito quando o mouse passa por cima */
+.btn-comprar:hover {
+  background-color: #218838;
+}
+
+/* Efeito de "clique" (o botão dá uma afundadinha) */
+.btn-comprar:active {
+  transform: scale(0.98);
+}
+
+/* --- HEADER E CARRINHO --- */
+.header-loja {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border-radius: 0 0 10px 10px;
+}
+
+.header-loja h2 {
+  margin: 0;
+  color: #333;
+}
+
+.carrinho-icone {
+  font-size: 24px;
+  position: relative;
+  cursor: pointer;
+}
+
+/* O numerozinho vermelho */
+#contador-carrinho {
+  background-color: #ff4757;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: -8px;
+  right: -10px;
 }

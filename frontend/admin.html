@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Admin - Loja</title>
+    <link rel="stylesheet" href="src/css/style.css" />
+  </head>
+  <body>
+    <h1>Painel do Gerente ⚙️</h1>
+
+    <div class="card-produto form-container">
+      <form id="form-cadastro">
+        <h3>Cadastrar Novo Tênis</h3>
+
+        <label for="nome">Nome do Produto:</label>
+        <input type="text" id="nome" class="input-form" required />
+
+        <label for="preco">Preço (R$):</label>
+        <input
+          type="number"
+          step="0.01"
+          id="preco"
+          class="input-form"
+          required
+        />
+
+        <label for="imagemUrl"
+          >Caminho da Imagem (ex: src/assets/img/foto.webp):</label
+        >
+        <input type="text" id="imagemUrl" class="input-form" required />
+
+        <label for="idade">Faixa Etária (ex: 2 a 3 anos):</label>
+        <input type="text" id="idade" class="input-form" required />
+
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" class="input-form"></textarea>
+
+        <button type="submit" class="btn-salvar">
+          Salvar Produto no Banco
+        </button>
+      </form>
+    </div>
+
+    <script src="src/js/admin.js"></script>
+  </body>
+</html>
