@@ -15,6 +15,7 @@ public class Produto {
     private Double preco;
     private String imagemUrl;
     private String nome;
+    @Column(length = 10000)
     private String descricao;
     private String categoriaFaixaEtaria;
 

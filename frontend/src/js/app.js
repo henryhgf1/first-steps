@@ -92,7 +92,7 @@ function finalizarCompra() {
   let textoCodificado = encodeURIComponent(mensagem);
 
   // 4. Coloque o SEU número aqui (55 + DDD + Número)
-  let telefone = "5511921355678";
+  let telefone = "5517981881583";
 
   // 5. Cria o link mágico do WhatsApp e abre em uma nova aba
   let urlWhatsApp = `https://wa.me/${telefone}?text=${textoCodificado}`;
@@ -107,46 +107,102 @@ function finalizarCompra() {
 // Já chama a função de cara para mostrar o número certo ao carregar a página
 atualizarContador();
 // 2. Dizemos ao Front-end: "Vá lá no nosso servidor Java e traga a lista de calçados"
+// --- MOTOR DE PESQUISA E VITRINE ---
+const campoPesquisa = document.getElementById("campo-pesquisa");
+
+// Variável global para guardar TODOS os produtos que vierem do Banco de Dados
+let todosOsProdutos = [];
+
+// Criamos uma função separada que só tem um trabalho: Desenhar Tênis na tela!
+function desenharVitrine(listaParaDesenhar) {
+  vitrine.innerHTML = ""; // Limpa a vitrine antes de desenhar
+
+  // Se a pesquisa não achar nada, avisa o cliente
+  if (listaParaDesenhar.length === 0) {
+    vitrine.innerHTML = `
+        <p style='text-align:center; width:100%; color:#888; font-size: 18px; margin-top: 50px;'>
+            Nenhum tênis encontrado. 😢 Tente buscar outra cor ou modelo!
+        </p>`;
+    return;
+  }
+
+  // O ForEach desenha os cards da lista que passarmos para ele
+  listaParaDesenhar.forEach((produto) => {
+    // 🧠 INTELIGÊNCIA: Só cria o botão "Ver mais" se a descrição for grande
+    let botaoVerMais = "";
+    if (produto.descricao.length > 100) {
+      botaoVerMais = `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`;
+    }
+
+    vitrine.innerHTML += `
+        <div class="card-produto">
+            <img src="${produto.imagemUrl}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+            <h3>${produto.nome}</h3>
+            
+            <p class="descricao-produto" id="desc-${produto.id}">${produto.descricao}</p>
+            ${botaoVerMais} <h2 style="color: #ff6b6b;">R$ ${produto.preco.toFixed(2)}</h2>
+            <span class="badge-idade">Pezinho: ${produto.categoriaFaixaEtaria}</span>
+            <button class="btn-comprar" onclick="adicionarAoCarrinho('${produto.nome}', ${produto.preco})">
+                Comprar Agora
+            </button>
+        </div>
+    `;
+  });
+}
+
+// 1. Buscamos do Java (Executa apenas UMA vez ao abrir a página)
 fetch("http://localhost:8080/api/produtos")
-  .then((resposta) => resposta.json()) // Transforma a resposta da internet em JSON
+  .then((resposta) => resposta.json())
   .then((produtos) => {
-    console.log("SUCESSO! Olha o que veio do Java:", produtos);
-
-    // Limpamos a vitrine para não duplicar se a página atualizar
-    vitrine.innerHTML = "";
-
-    // O SEGREDO ESTÁ AQUI: O forEach!
-    // Ele vai passar por cada 'produto' dentro da lista de 'produtos'
-    produtos.forEach((produto) => {
-      vitrine.innerHTML += `
-                <div class="card-produto">
-                    <img src="${produto.imagemUrl}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
-                    <h3>${produto.nome}</h3>
-                    <p>${produto.descricao}</p>
-                    <h2 style="color: #ff6b6b;">R$ ${produto.preco.toFixed(2)}</h2>
-                    <span class="badge-idade">Pezinho: ${produto.categoriaFaixaEtaria}</span>
-                    
-                    <button class="btn-comprar" onclick="adicionarAoCarrinho('${produto.nome}')">
-    Comprar Agora
-</button>
-                </div>
-            `;
-    });
+    console.log("SUCESSO! Produtos carregados:", produtos);
+    todosOsProdutos = produtos; // Guardamos a "cópia oficial" na memória
+    desenharVitrine(todosOsProdutos); // Desenha a vitrine completa inicialmente
   })
   .catch((erro) => console.error("Erro ao conectar com a API:", erro));
+
+// 2. A MÁGICA DA PESQUISA! Ouve cada letra que o cliente digita
+campoPesquisa.addEventListener("input", function () {
+  const termoPesquisado = campoPesquisa.value.toLowerCase();
+
+  // Filtramos a lista oficial baseada no que foi digitado
+  const produtosFiltrados = todosOsProdutos.filter((produto) => {
+    return (
+      produto.nome.toLowerCase().includes(termoPesquisado) ||
+      produto.descricao.toLowerCase().includes(termoPesquisado) ||
+      produto.categoriaFaixaEtaria.toLowerCase().includes(termoPesquisado)
+    );
+  });
+
+  // Pedimos para a vitrine se redesenhar apenas com os filtrados
+  desenharVitrine(produtosFiltrados);
+});
 
 // --- NOTIFICAÇÃO TOAST ---
 function mostrarToast(mensagem) {
   const toast = document.getElementById("toast");
-  toast.innerText = mensagem; // Troca o texto
+  toast.innerText = mensagem;
 
-  // Faz a notificação deslizar para dentro
   toast.classList.remove("toast-escondido");
   toast.classList.add("toast-visivel");
 
-  // O "setTimeout" é um cronômetro. Depois de 3000 milissegundos (3 segundos), ele esconde de novo!
   setTimeout(() => {
     toast.classList.remove("toast-visivel");
     toast.classList.add("toast-escondido");
   }, 3000);
+}
+
+// --- FUNÇÃO VER MAIS / VER MENOS ---
+function alternarDescricao(idDescricao, botao) {
+  // Pega o parágrafo exato que o cliente clicou
+  const paragrafo = document.getElementById(idDescricao);
+
+  // O 'toggle' liga a classe se estiver desligada, e desliga se estiver ligada
+  paragrafo.classList.toggle("expandida");
+
+  // Muda o textinho do botão para fazer sentido
+  if (paragrafo.classList.contains("expandida")) {
+    botao.innerText = "Ver menos";
+  } else {
+    botao.innerText = "Ver mais";
+  }
 }
