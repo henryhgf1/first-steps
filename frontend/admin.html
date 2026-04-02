@@ -34,13 +34,17 @@
         <input type="text" id="idade" class="input-form" required />
 
         <label for="descricao">Descrição:</label>
-        <textarea id="descricao" class="input-form"></textarea>
+        <textarea id="descricao" class="campo-descricao" placeholder="Digite uma descrição detalhada aqui..." rows="4" required></textarea>
 
         <button type="submit" class="btn-salvar">
           Salvar Produto no Banco
         </button>
       </form>
     </div>
+    <hr class="linha-divisoria-admin" />
+    <h2 class="titulo-admin">Estoque Atual 📦</h2>
+
+    <div id="lista-admin-produtos" class="container-estoque"></div>
 
     <script src="src/js/admin.js"></script>
   </body>

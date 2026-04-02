@@ -250,3 +250,146 @@ h1 {
   opacity: 1;
   transform: translateX(0); /* Desliza para dentro da tela */
 }
+/* --- BARRA DE PESQUISA --- */
+.container-pesquisa {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+#campo-pesquisa {
+  width: 100%;
+  max-width: 500px;
+  padding: 15px 25px;
+  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 30px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  color: #555;
+}
+
+/* Efeito quando o cliente clica para digitar */
+#campo-pesquisa:focus {
+  border-color: #7ab8bf;
+  box-shadow: 0 4px 15px rgba(122, 184, 191, 0.2);
+}
+
+/* --- ESTILO DA LISTA DO ADMIN --- */
+.admin-item-produto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border-left: 5px solid #ff4757; /* Bordinha vermelha de destaque */
+}
+
+.admin-item-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-item-info img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.btn-excluir-admin {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-excluir-admin:hover {
+    background: #e03e4d;
+}
+/* --- ORGANIZAÇÃO DO DASHBOARD ADMIN --- */
+.linha-divisoria-admin {
+    margin: 40px auto; 
+    max-width: 800px; 
+    border: 1px solid #eee;
+}
+
+.titulo-admin {
+    text-align: center; 
+    color: #555;
+}
+
+.container-estoque {
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 20px;
+}
+
+/* --- ESTILO DA ÁREA DE DESCRIÇÃO --- */
+.campo-descricao {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: inherit; /* Mantém a mesma fonte do resto do site */
+    resize: vertical; /* Deixa o cliente puxar a setinha só para baixo */
+    margin-bottom: 15px;
+}
+
+/* --- ESTILO DO TEXTÃO (VER MAIS) --- */
+.descricao-produto {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* O SEGREDO: Mostra no máximo 3 linhas! */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+/* Quando o JavaScript adicionar essa classe, ele tira o limite de linhas */
+.descricao-produto.expandida {
+    -webkit-line-clamp: unset; 
+}
+
+.btn-ver-mais {
+    color: #ff6b6b; /* Cor de destaque */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.btn-ver-mais:hover {
+    text-decoration: underline;
+}
+
+/* --- BARRA DE ROLAGEM DO CARRINHO --- */
+#lista-itens-carrinho {
+    max-height: 350px; /* Define a altura máxima da lista */
+    overflow-y: auto;  /* O Segredo: Cria a barra de rolagem vertical apenas se precisar */
+    padding-right: 10px; /* Dá um espacinho para a barra não colar nos botões vermelhos */
+    margin-bottom: 15px;
+}
+
+/* 🎨 Toque de Sênior: Deixando a barra de rolagem mais fina e elegante (Estilo iPhone) */
+#lista-itens-carrinho::-webkit-scrollbar {
+    width: 6px;
+}
+#lista-itens-carrinho::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
+#lista-itens-carrinho::-webkit-scrollbar-track {
+    background-color: #f1f1f1; 
+}
