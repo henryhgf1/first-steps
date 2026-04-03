@@ -85,7 +85,7 @@ function finalizarCompra() {
   mensagem += "\nAguardo o retorno para calcular o frete e o pagamento!";
 
   let textoCodificado = encodeURIComponent(mensagem);
-  let telefone = "5517981881583"; // Seu número mantido aqui!
+  let telefone = "5511921355678"; // Seu número mantido aqui!
   let urlWhatsApp = `https://wa.me/${telefone}?text=${textoCodificado}`;
   window.open(urlWhatsApp, "_blank");
 
