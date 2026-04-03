@@ -12,6 +12,7 @@ h1 {
   margin-bottom: 40px;
 }
 
+
 #vitrine-produtos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
