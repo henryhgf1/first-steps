@@ -140,7 +140,7 @@ todosOsProdutos = [
         id: 1,
         nome: "Tênis Esportivo Kids",
         preco: 199.99,
-        imagemUrl: "https://imgnike-a.akamaihd.net/1920x1920/02462351.jpg", 
+        imagemUrl: "https://images.tcdn.com.br/img/img_prod/1126755/tenis_nike_pico_2_infantil_preto_e_branco_79_1_74477839352e0f80753d07e601550785.jpg", 
         descricao: "Perfeito para correr e brincar. Super leve, confortável e fácil de calçar o dia todo.",
         categoriaFaixaEtaria: "2 a 3 anos"
     },
@@ -148,7 +148,7 @@ todosOsProdutos = [
         id: 2,
         nome: "Tênis Street Talk",
         preco: 229.00,
-        imagemUrl: "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/25f16e03328e4e6bbcb3ad400109961d_9366/Tenis_Grand_Court_Preto_GW6511_01_standard.jpg",
+        imagemUrl: "https://static.netshoes.com.br/produtos/tenis-adidas-grand-court-20-infantil/06/FB9-2151-006/FB9-2151-006_zoom1.jpg",
         descricao: "O clássico para o dia a dia. Combina com qualquer roupinha e é super resistente.",
         categoriaFaixaEtaria: "3 a 5 anos"
     },
