@@ -138,18 +138,18 @@ function desenharVitrine(listaParaDesenhar) {
 todosOsProdutos = [
     {
         id: 1,
-        nome: "Tênis Esportivo Kids",
-        preco: 199.99,
-        imagemUrl: "https://images.tcdn.com.br/img/img_prod/1126755/tenis_nike_pico_2_infantil_preto_e_branco_79_1_74477839352e0f80753d07e601550785.jpg", 
-        descricao: "Perfeito para correr e brincar. Super leve, confortável e fácil de calçar o dia todo.",
-        categoriaFaixaEtaria: "2 a 3 anos"
+        nome: "Tênis Masculino Nike Jordan Access Court Mid",
+        preco: 664.99,
+        imagemUrl: "https://imgcentauro-a.akamaihd.net/660x660/99756K19A2.jpg", 
+        descricao: "Tênis Masculino Nike Jordan Access Court Mid: Estilo e Performance Inigualáveis!",
+        categoriaFaixaEtaria: "3 a 5 anos"
     },
     {
         id: 2,
-        nome: "Tênis Street Talk",
+        nome: "Sandália Juvenil Crocs Bayaband Clog",
         preco: 229.00,
-        imagemUrl: "https://static.netshoes.com.br/produtos/tenis-adidas-grand-court-20-infantil/06/FB9-2151-006/FB9-2151-006_zoom1.jpg",
-        descricao: "O clássico para o dia a dia. Combina com qualquer roupinha e é super resistente.",
+        imagemUrl: "https://imgcentauro-a.akamaihd.net/800x800/9972ZDKLA2.jpg",
+        descricao: "A Sandália Juvenil Crocs Bayaband Clog combina o visual clássico da Crocs com um toque moderno e cheio de estilo.",
         categoriaFaixaEtaria: "3 a 5 anos"
     },
     {
