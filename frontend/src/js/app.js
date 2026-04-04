@@ -1,180 +1,55 @@
+let produtos = [];
+let carrinho = [];
 
-const vitrine = document.getElementById("vitrine-produtos");
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+async function carregarProdutosDaAPI() {
+  try {
+    // 🚨 ATENÇÃO: Se a sua rota no Java não for "/produtos", mude aqui embaixo (ex: "/tenis", "/api/calcados")
+    const urlDaSuaAPI = "https://calcados-api.onrender.com/api/produtos";
 
-function atualizarContador() {
-  document.getElementById("contador-carrinho").innerText = carrinho.length;
-}
+    const resposta = await fetch(urlDaSuaAPI);
+    produtos = await resposta.json();
 
-
-function adicionarAoCarrinho(nomeProduto) {
-
-  carrinho.push(nomeProduto);
-
-
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
-
-
-  atualizarContador();
-  mostrarToast(`🛒 ${nomeProduto} foi adicionado ao seu carrinho!`);
-}
-
-const modal = document.getElementById("modal-carrinho");
-
-function abrirModal() {
-  modal.classList.remove("modal-escondido");
-  modal.classList.add("modal-visivel");
-  renderizarListaCarrinho();
-}
-
-function fecharModal() {
-  modal.classList.remove("modal-visivel");
-  modal.classList.add("modal-escondido");
-}
-
-function renderizarListaCarrinho() {
-  const divLista = document.getElementById("lista-itens-carrinho");
-  divLista.innerHTML = "";
-
-  if (carrinho.length === 0) {
-    divLista.innerHTML =
-      "<p style='text-align:center; color:#888;'>Seu carrinho está vazio.</p>";
-    return;
+    carregarVitrine();
+  } catch (erro) {
+    console.error("Erro ao buscar a API:", erro);
+    document.getElementById("vitrine-produtos").innerHTML =
+      "<p>Erro ao carregar a vitrine. O servidor está online?</p>";
   }
-  carrinho.forEach((item, index) => {
-    divLista.innerHTML += `
-            <div class="item-carrinho">
-                <span>👟 ${item}</span>
-                <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
+}
+
+function carregarVitrine() {
+  const vitrine = document.getElementById("vitrine-produtos");
+  vitrine.innerHTML = "";
+
+  produtos.forEach((produto) => {
+    // 🚨 ATENÇÃO 2: Aqui os nomes (produto.nome, produto.preco) TÊM que ser
+    // exatamente iguais aos nomes das variáveis que você criou na sua classe Java!
+    vitrine.innerHTML += `
+            <div class="card-produto">
+                <img src="${produto.imagem || "https://via.placeholder.com/200"}" alt="${produto.nome}" width="200">
+                <h3>${produto.nome}</h3>
+                <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
+                <button onclick="adicionarAoCarrinho(${produto.id})">Adicionar ao Carrinho</button>
             </div>
         `;
   });
 }
 
-function removerItem(index) {
-  carrinho.splice(index, 1);
-
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
-
-  atualizarContador();
-  renderizarListaCarrinho();
-}
-function finalizarCompra() {
-  if (carrinho.length === 0) {
-    alert("Seu carrinho está vazio! Adicione alguns tênis primeiro. 👟");
-    return; 
-  }
-
-  let mensagem = "Olá! Gostaria de finalizar a compra dos seguintes itens:\n\n";
-
-  carrinho.forEach((item, index) => {
-    mensagem += `${index + 1} - ${item}\n`;
-  });
-
-  mensagem += "\nAguardo o retorno para calcular o frete e o pagamento!";
-
-  let textoCodificado = encodeURIComponent(mensagem);
-
-  let telefone = "5511921355678";
-
-  let urlWhatsApp = `https://wa.me/${telefone}?text=${textoCodificado}`;
-  window.open(urlWhatsApp, "_blank");
-
-  carrinho = [];
-  localStorage.removeItem("carrinho");
-  atualizarContador();
-
-  fecharModal(); 
-}
-atualizarContador();
-const campoPesquisa = document.getElementById("campo-pesquisa");
-
-let todosOsProdutos = [];
-
-function desenharVitrine(listaParaDesenhar) {
-  vitrine.innerHTML = ""; 
-
-  if (listaParaDesenhar.length === 0) {
-    vitrine.innerHTML = `
-        <p style='text-align:center; width:100%; color:#888; font-size: 18px; margin-top: 50px;'>
-            Nenhum tênis encontrado. 😢 Tente buscar outra cor ou modelo!
-        </p>`;
-    return;
-  }
-
-
-  listaParaDesenhar.forEach((produto) => {
-    let botaoVerMais = "";
-    if (produto.descricao.length > 100) {
-      botaoVerMais = `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`;
-    }
-
-    vitrine.innerHTML += `
-        <div class="card-produto">
-            <img src="${produto.imagemUrl}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
-            <h3>${produto.nome}</h3>
-            
-            <p class="descricao-produto" id="desc-${produto.id}">${produto.descricao}</p>
-            ${botaoVerMais} <h2 style="color: #ff6b6b;">R$ ${produto.preco.toFixed(2)}</h2>
-            <span class="badge-idade">Pezinho: ${produto.categoriaFaixaEtaria}</span>
-            <button class="btn-comprar" onclick="adicionarAoCarrinho('${produto.nome}', ${produto.preco})">
-                Comprar Agora
-            </button>
-        </div>
-    `;
-  });
+function adicionarAoCarrinho(idProduto) {
+  const produtoEscolhido = produtos.find((p) => p.id === idProduto);
+  carrinho.push(produtoEscolhido);
+  atualizarCarrinhoHTML();
 }
 
-
-fetch("http://localhost:8080/api/produtos")
-  .then((resposta) => resposta.json())
-  .then((produtos) => {
-    console.log("SUCESSO! Produtos carregados:", produtos);
-    todosOsProdutos = produtos; 
-    desenharVitrine(todosOsProdutos); 
-  })
-  .catch((erro) => console.error("Erro ao conectar com a API:", erro));
-
-campoPesquisa.addEventListener("input", function () {
-  const termoPesquisado = campoPesquisa.value.toLowerCase();
-  const produtosFiltrados = todosOsProdutos.filter((produto) => {
-    return (
-      produto.nome.toLowerCase().includes(termoPesquisado) ||
-      produto.descricao.toLowerCase().includes(termoPesquisado) ||
-      produto.categoriaFaixaEtaria.toLowerCase().includes(termoPesquisado)
-    );
-  });
-
-
-  desenharVitrine(produtosFiltrados);
-});
-
-
-function mostrarToast(mensagem) {
-  const toast = document.getElementById("toast");
-  toast.innerText = mensagem;
-
-  toast.classList.remove("toast-escondido");
-  toast.classList.add("toast-visivel");
-
-  setTimeout(() => {
-    toast.classList.remove("toast-visivel");
-    toast.classList.add("toast-escondido");
-  }, 3000);
+function atualizarCarrinhoHTML() {
+  let valorTotal = carrinho.reduce(
+    (total, produto) => total + produto.preco,
+    0,
+  );
+  document.getElementById("total-carrinho").innerText =
+    `Total: R$ ${valorTotal.toFixed(2)}`;
+  document.getElementById("quantidade-itens").innerText =
+    `${carrinho.length} itens`;
 }
 
-
-function alternarDescricao(idDescricao, botao) {
-
-  const paragrafo = document.getElementById(idDescricao);
-
-
-  paragrafo.classList.toggle("expandida");
-
-
-  if (paragrafo.classList.contains("expandida")) {
-    botao.innerText = "Ver menos";
-  } else {
-    botao.innerText = "Ver mais";
-  }
-}
+carregarProdutosDaAPI();
