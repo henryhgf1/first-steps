@@ -1,55 +1,194 @@
-let produtos = [];
-let carrinho = [];
+// 1. APRESENTAMOS OS ELEMENTOS PARA O JAVASCRIPT
+const vitrine = document.getElementById("vitrine-produtos");
+const campoPesquisa = document.getElementById("campo-pesquisa");
+const modal = document.getElementById("modal-carrinho");
 
+// --- BANCO DE DADOS E CARRINHO ---
+let todosOsProdutos = [];
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+// --- 🚀 A MÁGICA: PUXANDO DO SEU JAVA NO RENDER ---
 async function carregarProdutosDaAPI() {
   try {
-    // 🚨 ATENÇÃO: Se a sua rota no Java não for "/produtos", mude aqui embaixo (ex: "/tenis", "/api/calcados")
     const urlDaSuaAPI = "https://calcados-api.onrender.com/api/produtos";
-
     const resposta = await fetch(urlDaSuaAPI);
-    produtos = await resposta.json();
-
-    carregarVitrine();
+    todosOsProdutos = await resposta.json();
+    
+    // Assim que a resposta chega da nuvem, desenhamos a tela!
+    desenharVitrine(todosOsProdutos);
   } catch (erro) {
     console.error("Erro ao buscar a API:", erro);
-    document.getElementById("vitrine-produtos").innerHTML =
-      "<p>Erro ao carregar a vitrine. O servidor está online?</p>";
+    vitrine.innerHTML = "<p style='text-align:center; color:#888;'>Erro ao carregar a vitrine. O servidor está online?</p>";
   }
 }
 
-function carregarVitrine() {
-  const vitrine = document.getElementById("vitrine-produtos");
-  vitrine.innerHTML = "";
+// --- MOTOR DE PESQUISA E VITRINE ---
+function desenharVitrine(listaParaDesenhar) {
+  vitrine.innerHTML = ""; 
 
-  produtos.forEach((produto) => {
-    // 🚨 ATENÇÃO 2: Aqui os nomes (produto.nome, produto.preco) TÊM que ser
-    // exatamente iguais aos nomes das variáveis que você criou na sua classe Java!
+  if (listaParaDesenhar.length === 0) {
+    vitrine.innerHTML = `
+        <p style='text-align:center; width:100%; color:#888; font-size: 18px; margin-top: 50px;'>
+            Nenhum tênis encontrado. 😢
+        </p>`;
+    return;
+  }
+
+  listaParaDesenhar.forEach((produto) => {
+    // Tratando a imagem e descrição para não quebrar caso o Java não envie
+    const imagem = produto.imagem || produto.imagemUrl || "https://via.placeholder.com/200";
+    const desc = produto.descricao || "";
+    const idade = produto.categoriaFaixaEtaria || "Infantil";
+
+    let botaoVerMais = "";
+    if (desc.length > 100) {
+      botaoVerMais = `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`;
+    }
+
     vitrine.innerHTML += `
-            <div class="card-produto">
-                <img src="${produto.imagem || "https://via.placeholder.com/200"}" alt="${produto.nome}" width="200">
-                <h3>${produto.nome}</h3>
-                <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
-                <button onclick="adicionarAoCarrinho(${produto.id})">Adicionar ao Carrinho</button>
-            </div>
-        `;
+        <div class="card-produto">
+            <img src="${imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+            <h3>${produto.nome}</h3>
+            <p class="descricao-produto" id="desc-${produto.id}">${desc}</p>
+            ${botaoVerMais} 
+            <h2 style="color: #ff6b6b;">R$ ${produto.preco.toFixed(2)}</h2>
+            <span class="badge-idade">Pezinho: ${idade}</span>
+            <button class="btn-comprar" onclick="adicionarAoCarrinho('${produto.nome}', ${produto.preco})">
+                Comprar Agora
+            </button>
+        </div>
+    `;
   });
 }
 
-function adicionarAoCarrinho(idProduto) {
-  const produtoEscolhido = produtos.find((p) => p.id === idProduto);
-  carrinho.push(produtoEscolhido);
-  atualizarCarrinhoHTML();
+// Lógica da barra de pesquisa
+if (campoPesquisa) {
+  campoPesquisa.addEventListener("input", function () {
+    const termoPesquisado = campoPesquisa.value.toLowerCase();
+    const produtosFiltrados = todosOsProdutos.filter((produto) => {
+      const nome = produto.nome ? produto.nome.toLowerCase() : "";
+      const desc = produto.descricao ? produto.descricao.toLowerCase() : "";
+      return nome.includes(termoPesquisado) || desc.includes(termoPesquisado);
+    });
+    desenharVitrine(produtosFiltrados);
+  });
 }
 
-function atualizarCarrinhoHTML() {
-  let valorTotal = carrinho.reduce(
-    (total, produto) => total + produto.preco,
-    0,
-  );
-  document.getElementById("total-carrinho").innerText =
-    `Total: R$ ${valorTotal.toFixed(2)}`;
-  document.getElementById("quantidade-itens").innerText =
-    `${carrinho.length} itens`;
+// --- LÓGICA DO CARRINHO ---
+function adicionarAoCarrinho(nomeProduto, precoProduto) {
+  const item = { nome: nomeProduto, preco: precoProduto };
+  carrinho.push(item);
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  atualizarContador();
+  mostrarToast(`🛒 ${nomeProduto} adicionado!`);
 }
 
-carregarProdutosDaAPI();
+function atualizarContador() {
+  const qtdItens = document.getElementById("quantidade-itens");
+  if (qtdItens) {
+    qtdItens.innerText = `${carrinho.length} itens`;
+  }
+}
+
+function removerItem(index) {
+  carrinho.splice(index, 1);
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  atualizarContador();
+  renderizarListaCarrinho();
+}
+
+// --- CONTROLE DA JANELA FLUTUANTE (MODAL) ---
+function abrirModal() {
+  modal.classList.remove("modal-escondido");
+  modal.classList.add("modal-visivel");
+  renderizarListaCarrinho(); 
+}
+
+function fecharModal() {
+  modal.classList.remove("modal-visivel");
+  modal.classList.add("modal-escondido");
+}
+
+function renderizarListaCarrinho() {
+  const divLista = document.getElementById("lista-itens-carrinho");
+  divLista.innerHTML = ""; 
+
+  if (carrinho.length === 0) {
+    divLista.innerHTML = "<p style='text-align:center; color:#888;'>Seu carrinho está vazio.</p>";
+    return;
+  }
+
+  let valorTotal = 0; 
+  carrinho.forEach((item, index) => {
+    valorTotal += item.preco;
+    divLista.innerHTML += `
+        <div class="item-carrinho">
+            <span>👟 ${item.nome} - R$ ${item.preco.toFixed(2)}</span>
+            <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
+        </div>
+    `;
+  });
+
+  divLista.innerHTML += `
+    <div style="text-align: right; margin-top: 20px; font-size: 18px; color: #333; border-top: 2px dashed #eee; padding-top: 15px;">
+        <strong>Total a pagar: <span style="color: #28a745;">R$ ${valorTotal.toFixed(2)}</span></strong>
+    </div>
+  `;
+}
+
+// --- CHECKOUT NO WHATSAPP ---
+function finalizarCompra() {
+  if (carrinho.length === 0) {
+    alert("Seu carrinho está vazio! Adicione alguns tênis primeiro. 👟");
+    return; 
+  }
+
+  let mensagem = "Olá! Gostaria de finalizar a compra dos seguintes itens:\n\n";
+  let valorTotal = 0;
+
+  carrinho.forEach((item, index) => {
+    mensagem += `${index + 1} - ${item.nome} (R$ ${item.preco.toFixed(2)})\n`;
+    valorTotal += item.preco;
+  });
+
+  mensagem += `\n*Total do Pedido: R$ ${valorTotal.toFixed(2)}*\n`;
+  mensagem += "\nAguardo o retorno para calcular o frete e o pagamento!";
+
+  let textoCodificado = encodeURIComponent(mensagem);
+  let telefone = "5511921355678"; 
+  let urlWhatsApp = `https://wa.me/${telefone}?text=${textoCodificado}`;
+  window.open(urlWhatsApp, "_blank");
+
+  carrinho = []; 
+  localStorage.removeItem("carrinho"); 
+  atualizarContador();
+  fecharModal(); 
+}
+
+// --- EFEITOS VISUAIS ---
+function mostrarToast(mensagem) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.innerText = mensagem;
+  toast.classList.remove("toast-escondido");
+  toast.classList.add("toast-visivel");
+
+  setTimeout(() => {
+    toast.classList.remove("toast-visivel");
+    toast.classList.add("toast-escondido");
+  }, 3000);
+}
+
+function alternarDescricao(idDescricao, botao) {
+  const paragrafo = document.getElementById(idDescricao);
+  paragrafo.classList.toggle("expandida");
+  if (paragrafo.classList.contains("expandida")) {
+    botao.innerText = "Ver menos";
+  } else {
+    botao.innerText = "Ver mais";
+  }
+}
+
+// --- INICIALIZAÇÃO DA LOJA ---
+atualizarContador();
+carregarProdutosDaAPI(); // Liga a máquina puxando do Java!
