@@ -1,15 +1,18 @@
 const vitrine = document.getElementById("vitrine-produtos");
 const campoPesquisa = document.getElementById("campo-pesquisa");
 const modal = document.getElementById("modal-carrinho");
+
 let todosOsProdutos = [];
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+// 🧠 NOVO: Um "caderninho" para o JS lembrar qual tamanho a pessoa clicou em cada tênis
+let tamanhosSelecionados = {};
 
 async function carregarProdutosDaAPI() {
   try {
     const urlDaSuaAPI = "https://calcados-api.onrender.com/api/produtos";
     const resposta = await fetch(urlDaSuaAPI);
     todosOsProdutos = await resposta.json();
-
     desenharVitrine(todosOsProdutos);
   } catch (erro) {
     console.error("Erro ao buscar a API:", erro);
@@ -18,14 +21,27 @@ async function carregarProdutosDaAPI() {
   }
 }
 
+// 🧠 NOVO: Função que pinta o botão clicado
+function escolherTamanho(idProduto, tamanho) {
+  // Salva no "caderninho" o tamanho escolhido para esse produto
+  tamanhosSelecionados[idProduto] = tamanho;
+
+  // Tira a classe 'selecionado' de todos os botões desse produto
+  const botoes = document.querySelectorAll(`.tamanho-btn-${idProduto}`);
+  botoes.forEach((btn) => btn.classList.remove("selecionado"));
+
+  // Acende apenas o botão que acabou de ser clicado
+  const botaoClicado = document.getElementById(
+    `btn-tam-${idProduto}-${tamanho}`,
+  );
+  if (botaoClicado) botaoClicado.classList.add("selecionado");
+}
+
 function desenharVitrine(listaParaDesenhar) {
   vitrine.innerHTML = "";
 
   if (listaParaDesenhar.length === 0) {
-    vitrine.innerHTML = `
-        <p style='text-align:center; width:100%; color:#888; font-size: 18px; margin-top: 50px;'>
-            Nenhum tênis encontrado. 😢
-        </p>`;
+    vitrine.innerHTML = `<p style='text-align:center; width:100%; color:#888; font-size: 18px; margin-top: 50px;'>Nenhum tênis encontrado. 😢</p>`;
     return;
   }
 
@@ -40,15 +56,37 @@ function desenharVitrine(listaParaDesenhar) {
       botaoVerMais = `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`;
     }
 
+    // 🧠 NOVO: Gerando os quadradinhos de tamanho dinamicamente (Padrão 20 ao 25)
+    const tamanhosHTML = [20, 21, 22, 23, 24, 25]
+      .map(
+        (tam) => `
+      <button id="btn-tam-${produto.id}-${tam}" 
+              class="btn-tamanho tamanho-btn-${produto.id}" 
+              onclick="escolherTamanho('${produto.id}', '${tam}')">
+        ${tam}
+      </button>
+    `,
+      )
+      .join("");
+
     vitrine.innerHTML += `
         <div class="card-produto">
-            <img src="${imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+            <img src="${imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px; object-fit: cover; aspect-ratio: 4/3;">
             <h3>${produto.nome}</h3>
             <p class="descricao-produto" id="desc-${produto.id}">${desc}</p>
             ${botaoVerMais} 
-            <h2 style="color: #ff6b6b;">R$ ${produto.preco.toFixed(2)}</h2>
+            
+            <div class="container-tamanhos">
+               <span class="titulo-tamanho">Escolha o tamanho:</span>
+               <div class="grupo-botoes-tamanho">
+                  ${tamanhosHTML}
+               </div>
+            </div>
+
+            <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${produto.preco.toFixed(2)}</h2>
             <span class="badge-idade">Pezinho: ${idade}</span>
-            <button class="btn-comprar" onclick="adicionarAoCarrinho('${produto.nome}', ${produto.preco})">
+            
+            <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco})">
                 Comprar Agora
             </button>
         </div>
@@ -56,24 +94,26 @@ function desenharVitrine(listaParaDesenhar) {
   });
 }
 
-if (campoPesquisa) {
-  campoPesquisa.addEventListener("input", function () {
-    const termoPesquisado = campoPesquisa.value.toLowerCase();
-    const produtosFiltrados = todosOsProdutos.filter((produto) => {
-      const nome = produto.nome ? produto.nome.toLowerCase() : "";
-      const desc = produto.descricao ? produto.descricao.toLowerCase() : "";
-      return nome.includes(termoPesquisado) || desc.includes(termoPesquisado);
-    });
-    desenharVitrine(produtosFiltrados);
-  });
+// 🧠 NOVO: O Juiz! Verifica se a pessoa escolheu o tamanho antes de ir pro carrinho
+function tentarComprar(idProduto, nomeProduto, precoProduto) {
+  const tamanhoEscolhido = tamanhosSelecionados[idProduto];
+
+  if (!tamanhoEscolhido) {
+    alert("⚠️ Opa! Por favor, selecione um tamanho antes de comprar.");
+    return; // Para a função aqui e não adiciona no carrinho
+  }
+
+  // Se escolheu o tamanho, manda pro carrinho!
+  adicionarAoCarrinho(nomeProduto, precoProduto, tamanhoEscolhido);
 }
 
-function adicionarAoCarrinho(nomeProduto, precoProduto) {
-  const item = { nome: nomeProduto, preco: precoProduto };
+// 🚨 ATUALIZADO: Agora o carrinho recebe o tamanho também
+function adicionarAoCarrinho(nomeProduto, precoProduto, tamanho) {
+  const item = { nome: nomeProduto, preco: precoProduto, tamanho: tamanho };
   carrinho.push(item);
   localStorage.setItem("carrinho", JSON.stringify(carrinho));
   atualizarContador();
-  mostrarToast(`🛒 ${nomeProduto} adicionado!`);
+  mostrarToast(`🛒 ${nomeProduto} (Tam: ${tamanho}) adicionado!`);
 }
 
 function atualizarContador() {
@@ -101,6 +141,7 @@ function fecharModal() {
   modal.classList.add("modal-escondido");
 }
 
+// 🚨 ATUALIZADO: Mostrando o tamanho dentro da lista do carrinho
 function renderizarListaCarrinho() {
   const divLista = document.getElementById("lista-itens-carrinho");
   divLista.innerHTML = "";
@@ -116,7 +157,7 @@ function renderizarListaCarrinho() {
     valorTotal += item.preco;
     divLista.innerHTML += `
         <div class="item-carrinho">
-            <span>👟 ${item.nome} - R$ ${item.preco.toFixed(2)}</span>
+            <span>👟 ${item.nome} <b>(Tam: ${item.tamanho})</b> - R$ ${item.preco.toFixed(2)}</span>
             <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
         </div>
     `;
@@ -124,11 +165,12 @@ function renderizarListaCarrinho() {
 
   divLista.innerHTML += `
     <div style="text-align: right; margin-top: 20px; font-size: 18px; color: #333; border-top: 2px dashed #eee; padding-top: 15px;">
-        <strong>Total a pagar: <span style="color: #28a745;">R$ ${valorTotal.toFixed(2)}</span></strong>
+        <strong>Total a pagar: <span style="color: #10B981;">R$ ${valorTotal.toFixed(2)}</span></strong>
     </div>
   `;
 }
 
+// 🚨 ATUALIZADO: Mandando o tamanho pro WhatsApp
 function finalizarCompra() {
   if (carrinho.length === 0) {
     alert("Seu carrinho está vazio! Adicione alguns tênis primeiro. 👟");
@@ -139,7 +181,7 @@ function finalizarCompra() {
   let valorTotal = 0;
 
   carrinho.forEach((item, index) => {
-    mensagem += `${index + 1} - ${item.nome} (R$ ${item.preco.toFixed(2)})\n`;
+    mensagem += `${index + 1} - ${item.nome} *(Tamanho: ${item.tamanho})* (R$ ${item.preco.toFixed(2)})\n`;
     valorTotal += item.preco;
   });
 
@@ -178,6 +220,18 @@ function alternarDescricao(idDescricao, botao) {
   } else {
     botao.innerText = "Ver mais";
   }
+}
+
+if (campoPesquisa) {
+  campoPesquisa.addEventListener("input", function () {
+    const termoPesquisado = campoPesquisa.value.toLowerCase();
+    const produtosFiltrados = todosOsProdutos.filter((produto) => {
+      const nome = produto.nome ? produto.nome.toLowerCase() : "";
+      const desc = produto.descricao ? produto.descricao.toLowerCase() : "";
+      return nome.includes(termoPesquisado) || desc.includes(termoPesquisado);
+    });
+    desenharVitrine(produtosFiltrados);
+  });
 }
 
 atualizarContador();
