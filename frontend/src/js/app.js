@@ -1,30 +1,25 @@
-// 1. APRESENTAMOS OS ELEMENTOS PARA O JAVASCRIPT
 const vitrine = document.getElementById("vitrine-produtos");
 const campoPesquisa = document.getElementById("campo-pesquisa");
 const modal = document.getElementById("modal-carrinho");
-
-// --- BANCO DE DADOS E CARRINHO ---
 let todosOsProdutos = [];
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-// --- 🚀 A MÁGICA: PUXANDO DO SEU JAVA NO RENDER ---
 async function carregarProdutosDaAPI() {
   try {
     const urlDaSuaAPI = "https://calcados-api.onrender.com/api/produtos";
     const resposta = await fetch(urlDaSuaAPI);
     todosOsProdutos = await resposta.json();
-    
-    // Assim que a resposta chega da nuvem, desenhamos a tela!
+
     desenharVitrine(todosOsProdutos);
   } catch (erro) {
     console.error("Erro ao buscar a API:", erro);
-    vitrine.innerHTML = "<p style='text-align:center; color:#888;'>Erro ao carregar a vitrine. O servidor está online?</p>";
+    vitrine.innerHTML =
+      "<p style='text-align:center; color:#888;'>Erro ao carregar a vitrine. O servidor está online?</p>";
   }
 }
 
-// --- MOTOR DE PESQUISA E VITRINE ---
 function desenharVitrine(listaParaDesenhar) {
-  vitrine.innerHTML = ""; 
+  vitrine.innerHTML = "";
 
   if (listaParaDesenhar.length === 0) {
     vitrine.innerHTML = `
@@ -35,8 +30,8 @@ function desenharVitrine(listaParaDesenhar) {
   }
 
   listaParaDesenhar.forEach((produto) => {
-    // Tratando a imagem e descrição para não quebrar caso o Java não envie
-    const imagem = produto.imagem || produto.imagemUrl || "https://via.placeholder.com/200";
+    const imagem =
+      produto.imagem || produto.imagemUrl || "https://via.placeholder.com/200";
     const desc = produto.descricao || "";
     const idade = produto.categoriaFaixaEtaria || "Infantil";
 
@@ -61,7 +56,6 @@ function desenharVitrine(listaParaDesenhar) {
   });
 }
 
-// Lógica da barra de pesquisa
 if (campoPesquisa) {
   campoPesquisa.addEventListener("input", function () {
     const termoPesquisado = campoPesquisa.value.toLowerCase();
@@ -74,7 +68,6 @@ if (campoPesquisa) {
   });
 }
 
-// --- LÓGICA DO CARRINHO ---
 function adicionarAoCarrinho(nomeProduto, precoProduto) {
   const item = { nome: nomeProduto, preco: precoProduto };
   carrinho.push(item);
@@ -84,12 +77,9 @@ function adicionarAoCarrinho(nomeProduto, precoProduto) {
 }
 
 function atualizarContador() {
-  // 🚨 Troque "ID_DA_SUA_BOLINHA_AQUI" pelo ID real que você achou no Passo 1
-  const qtdItens = document.getElementById("contador-carrinho"); 
-  
+  const qtdItens = document.getElementById("contador-carrinho");
   if (qtdItens) {
-    // Colocamos só o número, para caber bonito na sua bolinha vermelha!
-    qtdItens.innerText = carrinho.length; 
+    qtdItens.innerText = carrinho.length;
   }
 }
 
@@ -100,11 +90,10 @@ function removerItem(index) {
   renderizarListaCarrinho();
 }
 
-// --- CONTROLE DA JANELA FLUTUANTE (MODAL) ---
 function abrirModal() {
   modal.classList.remove("modal-escondido");
   modal.classList.add("modal-visivel");
-  renderizarListaCarrinho(); 
+  renderizarListaCarrinho();
 }
 
 function fecharModal() {
@@ -114,14 +103,15 @@ function fecharModal() {
 
 function renderizarListaCarrinho() {
   const divLista = document.getElementById("lista-itens-carrinho");
-  divLista.innerHTML = ""; 
+  divLista.innerHTML = "";
 
   if (carrinho.length === 0) {
-    divLista.innerHTML = "<p style='text-align:center; color:#888;'>Seu carrinho está vazio.</p>";
+    divLista.innerHTML =
+      "<p style='text-align:center; color:#888;'>Seu carrinho está vazio.</p>";
     return;
   }
 
-  let valorTotal = 0; 
+  let valorTotal = 0;
   carrinho.forEach((item, index) => {
     valorTotal += item.preco;
     divLista.innerHTML += `
@@ -139,11 +129,10 @@ function renderizarListaCarrinho() {
   `;
 }
 
-// --- CHECKOUT NO WHATSAPP ---
 function finalizarCompra() {
   if (carrinho.length === 0) {
     alert("Seu carrinho está vazio! Adicione alguns tênis primeiro. 👟");
-    return; 
+    return;
   }
 
   let mensagem = "Olá! Gostaria de finalizar a compra dos seguintes itens:\n\n";
@@ -158,17 +147,16 @@ function finalizarCompra() {
   mensagem += "\nAguardo o retorno para calcular o frete e o pagamento!";
 
   let textoCodificado = encodeURIComponent(mensagem);
-  let telefone = "5511921355678"; 
+  let telefone = "5511921355678";
   let urlWhatsApp = `https://wa.me/${telefone}?text=${textoCodificado}`;
   window.open(urlWhatsApp, "_blank");
 
-  carrinho = []; 
-  localStorage.removeItem("carrinho"); 
+  carrinho = [];
+  localStorage.removeItem("carrinho");
   atualizarContador();
-  fecharModal(); 
+  fecharModal();
 }
 
-// --- EFEITOS VISUAIS ---
 function mostrarToast(mensagem) {
   const toast = document.getElementById("toast");
   if (!toast) return;
@@ -192,6 +180,5 @@ function alternarDescricao(idDescricao, botao) {
   }
 }
 
-// --- INICIALIZAÇÃO DA LOJA ---
 atualizarContador();
-carregarProdutosDaAPI(); // Liga a máquina puxando do Java!
+carregarProdutosDaAPI();

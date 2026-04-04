@@ -1,19 +1,11 @@
-// Pegamos o formulário
 const formulario = document.getElementById("form-cadastro");
-
-// Dizemos: "Quando o formulário for enviado (submit), execute essa função"
 formulario.addEventListener("submit", function (event) {
-  // Isso impede a página de piscar/recarregar quando clica no botão
   event.preventDefault();
-
-  // 1. Pegamos os valores que o gerente digitou na tela
   const nome = document.getElementById("nome").value;
   const preco = parseFloat(document.getElementById("preco").value);
   const imagemUrl = document.getElementById("imagemUrl").value;
   const idade = document.getElementById("idade").value;
   const descricao = document.getElementById("descricao").value;
-
-  // 2. Montamos o "pacote" JSON
   const novoTenis = {
     nome: nome,
     descricao: descricao,
@@ -21,24 +13,22 @@ formulario.addEventListener("submit", function (event) {
     preco: preco,
     imagemUrl: imagemUrl,
     variacoes: [
-      // Colocamos uma variação padrão só para o Java não dar erro
       { cor: "Padrão", tamanho: 20, preco: preco, quantidadeEstoque: 10 },
     ],
   };
 
-  // 3. 🚀 Enviamos o pacote para o Java no Render via POST
   fetch("https://calcados-api.onrender.com/api/produtos", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(novoTenis), 
+    body: JSON.stringify(novoTenis),
   })
     .then((resposta) => {
       if (resposta.ok) {
         alert("✅ Tênis cadastrado com sucesso no Banco de Dados!");
-        formulario.reset(); 
-        carregarProdutosAdmin(); // Atualiza a lista na hora!
+        formulario.reset();
+        carregarProdutosAdmin();
       } else {
         alert("❌ Ops! O Java recusou o cadastro.");
       }
@@ -46,15 +36,13 @@ formulario.addEventListener("submit", function (event) {
     .catch((erro) => console.error("Erro na comunicação com a API:", erro));
 });
 
-// --- LÓGICA DO DASHBOARD (ESTOQUE ATUAL) ---
 const listaAdmin = document.getElementById("lista-admin-produtos");
 
-// 1. 🚀 Função que vai no Java do Render e traz todos os produtos
 function carregarProdutosAdmin() {
   fetch("https://calcados-api.onrender.com/api/produtos")
     .then((resposta) => resposta.json())
     .then((produtos) => {
-      listaAdmin.innerHTML = ""; 
+      listaAdmin.innerHTML = "";
 
       if (produtos.length === 0) {
         listaAdmin.innerHTML =
@@ -63,8 +51,10 @@ function carregarProdutosAdmin() {
       }
 
       produtos.forEach((produto) => {
-        // Tratamento rápido para a imagem não quebrar
-        const img = produto.imagemUrl || produto.imagem || "https://via.placeholder.com/150";
+        const img =
+          produto.imagemUrl ||
+          produto.imagem ||
+          "https://via.placeholder.com/150";
 
         listaAdmin.innerHTML += `
                 <div class="admin-item-produto">
@@ -83,7 +73,6 @@ function carregarProdutosAdmin() {
     .catch((erro) => console.error("Erro ao carregar produtos:", erro));
 }
 
-// 2. 🚀 A MÁGICA DE APAGAR DO BANCO DE DADOS (DELETE) NO RENDER
 function excluirProduto(idProduto) {
   if (
     confirm(
@@ -96,7 +85,7 @@ function excluirProduto(idProduto) {
       .then((resposta) => {
         if (resposta.ok) {
           alert("✅ Produto excluído com sucesso!");
-          carregarProdutosAdmin(); 
+          carregarProdutosAdmin();
         } else {
           alert("❌ Erro ao excluir o produto. O Java não deixou.");
         }
@@ -105,5 +94,4 @@ function excluirProduto(idProduto) {
   }
 }
 
-// Executa a função logo de cara para ver o que tem no banco
 carregarProdutosAdmin();
