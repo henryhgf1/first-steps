@@ -600,13 +600,9 @@ h1 {
   }
 }
 
-/* =========================================
-   SEÇÃO: NAVEGUE POR ESTILO (MOSAICO)
-========================================= */
-
 .estilo-container {
-  background-color: #f0f0f0; /* O fundo cinza chique da referência */
-  border-radius: 40px; /* Bordas bem redondas */
+  background-color: #f0f0f0; 
+  border-radius: 40px;
   padding: 60px 5%;
   max-width: 1200px;
   margin: 0 auto 60px auto;
@@ -622,11 +618,10 @@ h1 {
   letter-spacing: -1.5px;
 }
 
-/* O Grid que faz a mágica das 3 colunas invisíveis */
 .estilo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 320px; /* Aumentamos de 280px para 320px para dar mais "ar" pra foto */
+  grid-auto-rows: 320px;
   gap: 20px;
 }
 
@@ -637,11 +632,10 @@ h1 {
   background-color: #fff;
   cursor: pointer;
   width: 100%;
-  height: 100%; /* Garante que todos na mesma linha tenham a mesma altura */
+  height: 100%; 
   margin: 0;
 }
 
-/* Define quem é estreito e quem é largo */
 .estilo-card.pequeno {
   grid-column: span 1;
 }
@@ -651,28 +645,28 @@ h1 {
 
 .estilo-nome {
   position: absolute;
-  top: 20px; /* Chegou um pouco mais perto da borda */
-  left: 20px; /* Chegou um pouco mais perto da borda */
-  font-size: 1.4rem; /* Diminuímos o tamanho da letra para ficar mais chic */
+  top: 20px;
+  left: 20px; 
+  font-size: 1.4rem;
   font-weight: 700;
   color: #000;
   z-index: 2;
   background: rgba(255, 255, 255, 0.9);
-  padding: 8px 20px; /* Ajuste no "enchimento" da caixa branca */
+  padding: 8px 20px; 
   border-radius: 8px;
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombrinha leve pra destacar da foto */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .estilo-card img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Faz a foto preencher sem esticar */
+  object-fit: cover; 
   position: absolute;
   top: 0;
   left: 0;
-  transition: transform 0.5s ease; /* Animação de zoom */
+  transition: transform 0.5s ease; 
 }
 
 .estilo-card:hover img {
@@ -680,16 +674,17 @@ h1 {
 }
 
 @media (max-width: 800px) {
-@media (max-width: 800px) {
-  .estilo-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 240px; 
+  @media (max-width: 800px) {
+    .estilo-grid {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 240px;
+    }
+    .estilo-card.pequeno,
+    .estilo-card.grande {
+      grid-column: span 1;
+      height: 100%;
+    }
   }
-  .estilo-card.pequeno, .estilo-card.grande {
-    grid-column: span 1;
-    height: 100%;
-  }
-}
   .estilo-titulo {
     font-size: 2rem;
   }
