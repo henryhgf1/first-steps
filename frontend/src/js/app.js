@@ -5,11 +5,18 @@ const modal = document.getElementById("modal-carrinho");
 let todosOsProdutos = [];
 let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-// 🧠 NOVO: Um "caderninho" para o JS lembrar qual tamanho a pessoa clicou em cada tênis
 let tamanhosSelecionados = {};
 
 async function carregarProdutosDaAPI() {
   try {
+    // 1. 🚀 ANTES de ir na nuvem, desenhamos o Spinner na tela
+    vitrine.innerHTML = `
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <span class="loader-texto">Arrumando as prateleiras e buscando os tênis na nuvem... ☁️👟<br><small style="font-size: 12px; color: #94A3B8;">Isso pode levar alguns segundos no primeiro acesso do dia.</small></span>
+      </div>
+    `;
+
     const urlDaSuaAPI = "https://calcados-api.onrender.com/api/produtos";
     const resposta = await fetch(urlDaSuaAPI);
     todosOsProdutos = await resposta.json();
@@ -21,16 +28,12 @@ async function carregarProdutosDaAPI() {
   }
 }
 
-// 🧠 NOVO: Função que pinta o botão clicado
 function escolherTamanho(idProduto, tamanho) {
-  // Salva no "caderninho" o tamanho escolhido para esse produto
   tamanhosSelecionados[idProduto] = tamanho;
 
-  // Tira a classe 'selecionado' de todos os botões desse produto
   const botoes = document.querySelectorAll(`.tamanho-btn-${idProduto}`);
   botoes.forEach((btn) => btn.classList.remove("selecionado"));
 
-  // Acende apenas o botão que acabou de ser clicado
   const botaoClicado = document.getElementById(
     `btn-tam-${idProduto}-${tamanho}`,
   );
@@ -56,7 +59,6 @@ function desenharVitrine(listaParaDesenhar) {
       botaoVerMais = `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`;
     }
 
-    // 🧠 NOVO: Gerando os quadradinhos de tamanho dinamicamente (Padrão 20 ao 25)
     const tamanhosHTML = [20, 21, 22, 23, 24, 25]
       .map(
         (tam) => `
@@ -94,20 +96,17 @@ function desenharVitrine(listaParaDesenhar) {
   });
 }
 
-// 🧠 NOVO: O Juiz! Verifica se a pessoa escolheu o tamanho antes de ir pro carrinho
 function tentarComprar(idProduto, nomeProduto, precoProduto) {
   const tamanhoEscolhido = tamanhosSelecionados[idProduto];
 
   if (!tamanhoEscolhido) {
     alert("⚠️ Opa! Por favor, selecione um tamanho antes de comprar.");
-    return; // Para a função aqui e não adiciona no carrinho
+    return;
   }
 
-  // Se escolheu o tamanho, manda pro carrinho!
   adicionarAoCarrinho(nomeProduto, precoProduto, tamanhoEscolhido);
 }
 
-// 🚨 ATUALIZADO: Agora o carrinho recebe o tamanho também
 function adicionarAoCarrinho(nomeProduto, precoProduto, tamanho) {
   const item = { nome: nomeProduto, preco: precoProduto, tamanho: tamanho };
   carrinho.push(item);
@@ -141,7 +140,6 @@ function fecharModal() {
   modal.classList.add("modal-escondido");
 }
 
-// 🚨 ATUALIZADO: Mostrando o tamanho dentro da lista do carrinho
 function renderizarListaCarrinho() {
   const divLista = document.getElementById("lista-itens-carrinho");
   divLista.innerHTML = "";
@@ -170,7 +168,6 @@ function renderizarListaCarrinho() {
   `;
 }
 
-// 🚨 ATUALIZADO: Mandando o tamanho pro WhatsApp
 function finalizarCompra() {
   if (carrinho.length === 0) {
     alert("Seu carrinho está vazio! Adicione alguns tênis primeiro. 👟");
