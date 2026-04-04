@@ -1,21 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fdfbf7;
-  color: #444;
+  font-family: "Poppins", sans-serif;
+  background-color: #f8fafc; /* Branco gelo super moderno */
+  color: #334155;
   padding: 40px;
+  margin: 0;
 }
 
 h1 {
-  color: #7ab8bf;
+  color: #1e293b;
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -1px;
   margin-bottom: 40px;
 }
 
+/* --- VITRINE E CARDS --- */
 #vitrine-produtos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
+  gap: 30px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -23,127 +29,145 @@ h1 {
 .card-produto {
   background: white;
   padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-  border: 2px solid #f0f0f0;
+  border-radius: 24px; /* Bordas bem mais arredondadas */
+  /* Sombra moderna e suave em múltiplas camadas */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   max-width: 350px;
   margin: 0 auto;
+  border: 1px solid transparent; /* Prepara para o hover */
 }
 
 .card-produto:hover {
-  transform: translateY(-5px);
-  border-color: #7ab8bf;
+  transform: translateY(-10px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #e2e8f0;
 }
 
 .card-produto h3 {
-  color: #555;
-  margin-top: 0;
+  color: #1e293b;
+  margin-top: 5px;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .badge-idade {
-  background-color: #e8f4f5;
-  color: #7ab8bf;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-.form-container {
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: left;
-}
-
-.form-container h3 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.input-form {
-  width: 100%;
-  padding: 10px;
+  background-color: #eef2ff; /* Azul indigo super claro */
+  color: #4f46e5; /* Azul indigo forte */
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-.btn-salvar {
-  background: #7ab8bf;
-  color: white;
-  border: none;
-  padding: 12px;
-  width: 100%;
-  cursor: pointer;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 16px;
-  transition: background 0.3s ease;
-}
-
-.btn-salvar:hover {
-  background: #5a9ca3;
-}
-
+/* --- BOTÕES --- */
 .btn-comprar {
-  background-color: #28a745;
+  background-color: #10b981; /* Verde esmeralda premium */
   color: white;
   border: none;
-  padding: 12px;
+  padding: 14px;
   width: 100%;
-  margin-top: 20px;
-  border-radius: 5px;
+  margin-top: 15px;
+  border-radius: 9999px; /* Botão estilo pílula */
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition:
-    background 0.3s ease,
-    transform 0.1s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
 .btn-comprar:hover {
-  background-color: #218838;
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .btn-comprar:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
+/* --- HEADER E CARRINHO --- */
 .header-loja {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
-  padding: 15px 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
-  border-radius: 0 0 10px 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: bluer(10px);
+  padding: 20px 40px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+  border-radius: 20px;
+  position: sticky;
+  top: 10px;
+  z-index: 100;
 }
 
 .header-loja h2 {
   margin: 0;
-  color: #333;
+  color: #1e293b;
+  font-weight: 700;
 }
 
 .carrinho-icone {
-  font-size: 24px;
+  font-size: 26px;
   position: relative;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.carrinho-icone:hover {
+  transform: scale(1.1);
 }
 
 #contador-carrinho {
-  background-color: #ff4757;
+  background-color: #ef4444;
   color: white;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 8px;
   border-radius: 50%;
   position: absolute;
   top: -8px;
-  right: -10px;
+  right: -12px;
+  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
 }
 
+/* --- BARRA DE PESQUISA --- */
+.container-pesquisa {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 0 20px;
+}
+
+#campo-pesquisa {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 25px;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  border: 2px solid #e2e8f0;
+  border-radius: 9999px;
+  outline: none;
+  transition: all 0.3s ease;
+  color: #334155;
+  background-color: white;
+}
+
+#campo-pesquisa:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+/* --- MODAL DO CARRINHO --- */
 .modal-escondido {
   display: none;
 }
@@ -156,77 +180,105 @@ h1 {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(15, 23, 42, 0.6); /* Overlay mais moderno */
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
 }
 
 .modal-conteudo {
   background-color: #fff;
-  padding: 30px;
-  border-radius: 15px;
+  padding: 40px;
+  border-radius: 24px;
   width: 90%;
-  max-width: 400px;
+  max-width: 450px;
   position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalAparecer 0.3s ease-out;
+}
+
+@keyframes modalAparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .fechar-modal {
   position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 28px;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
   cursor: pointer;
-  color: #999;
+  color: #94a3b8;
+  line-height: 1;
 }
 
 .fechar-modal:hover {
-  color: #ff4757;
+  color: #ef4444;
 }
 
 .item-carrinho {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
-  color: #555;
-  font-weight: bold;
+  padding: 15px 0;
+  border-bottom: 1px solid #f1f5f9;
+  color: #475569;
+  font-weight: 500;
 }
 
 .btn-remover {
-  background-color: #ff4757;
-  color: white;
+  background-color: #fee2e2;
+  color: #ef4444;
   border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
+  padding: 8px 14px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-remover:hover {
+  background-color: #fecaca;
 }
 
 .btn-finalizar {
-  background-color: #28a745;
+  background-color: #10b981;
   color: white;
   border: none;
-  padding: 15px;
+  padding: 16px;
   width: 100%;
-  margin-top: 20px;
-  border-radius: 5px;
+  margin-top: 25px;
+  border-radius: 12px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-finalizar:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
 }
 
 #toast {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background-color: #28a745;
+  background-color: #1e293b;
   color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   z-index: 9999;
   transition:
     transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),
@@ -235,125 +287,36 @@ h1 {
 
 .toast-escondido {
   opacity: 0;
-  transform: translateX(150%);
+  transform: translateY(150%);
   pointer-events: none;
 }
-
 .toast-visivel {
   opacity: 1;
-  transform: translateX(0);
-}
-
-.container-pesquisa {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 0 20px;
-}
-
-#campo-pesquisa {
-  width: 100%;
-  max-width: 500px;
-  padding: 15px 25px;
-  font-size: 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 30px;
-  outline: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-  color: #555;
-}
-
-#campo-pesquisa:focus {
-  border-color: #7ab8bf;
-  box-shadow: 0 4px 15px rgba(122, 184, 191, 0.2);
-}
-
-.admin-item-produto {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 15px 20px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  border-left: 5px solid #ff4757;
-}
-
-.admin-item-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.admin-item-info img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #eee;
-}
-
-.btn-excluir-admin {
-  background: #ff4757;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.btn-excluir-admin:hover {
-  background: #e03e4d;
-}
-
-.linha-divisoria-admin {
-  margin: 40px auto;
-  max-width: 800px;
-  border: 1px solid #eee;
-}
-
-.titulo-admin {
-  text-align: center;
-  color: #555;
-}
-
-.container-estoque {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.campo-descricao {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  resize: vertical;
-  margin-bottom: 15px;
+  transform: translateY(0);
 }
 
 .descricao-produto {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3; 
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: 5px;
-  color: #666;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .descricao-produto.expandida {
   -webkit-line-clamp: unset;
+  line-clamp: unset;
 }
 
 .btn-ver-mais {
-  color: #ff6b6b;
+  color: #6366f1;
   cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
   display: inline-block;
   margin-bottom: 15px;
 }
@@ -362,19 +325,79 @@ h1 {
   text-decoration: underline;
 }
 
-#lista-itens-carrinho {
-  max-height: 350px;
-  overflow-y: auto;
-  padding-right: 10px;
+.form-container,
+.container-estoque {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.input-form,
+.campo-descricao {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+
+.input-form:focus,
+.campo-descricao:focus {
+  border-color: #6366f1;
+  outline: none;
+}
+
+.btn-salvar {
+  background: #6366f1; 
+  color: white;
+  border: none;
+  padding: 16px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.btn-salvar:hover {
+  background: #4f46e5;
+}
+
+.admin-item-produto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  padding: 15px 20px;
   margin-bottom: 15px;
+  border-radius: 12px;
+  border-left: 5px solid #6366f1;
 }
-#lista-itens-carrinho::-webkit-scrollbar {
-  width: 6px;
-}
-#lista-itens-carrinho::-webkit-scrollbar-thumb {
-  background-color: #bbb;
+
+.admin-item-info img {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
   border-radius: 10px;
 }
-#lista-itens-carrinho::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+
+.btn-excluir-admin {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.btn-excluir-admin:hover {
+  background: #dc2626;
 }
