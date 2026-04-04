@@ -84,9 +84,12 @@ function adicionarAoCarrinho(nomeProduto, precoProduto) {
 }
 
 function atualizarContador() {
-  const qtdItens = document.getElementById("quantidade-itens");
+  // 🚨 Troque "ID_DA_SUA_BOLINHA_AQUI" pelo ID real que você achou no Passo 1
+  const qtdItens = document.getElementById("contador-carrinho"); 
+  
   if (qtdItens) {
-    qtdItens.innerText = `${carrinho.length} itens`;
+    // Colocamos só o número, para caber bonito na sua bolinha vermelha!
+    qtdItens.innerText = carrinho.length; 
   }
 }
 
