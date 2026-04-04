@@ -13,7 +13,7 @@ formulario.addEventListener("submit", function (event) {
   const idade = document.getElementById("idade").value;
   const descricao = document.getElementById("descricao").value;
 
-  // 2. Montamos o "pacote" JSON (Idêntico ao que fazíamos no Insomnia!)
+  // 2. Montamos o "pacote" JSON
   const novoTenis = {
     nome: nome,
     descricao: descricao,
@@ -26,33 +26,35 @@ formulario.addEventListener("submit", function (event) {
     ],
   };
 
-  // 3. Enviamos o pacote para o Java via POST
-  fetch("http://localhost:8080/api/produtos", {
+  // 3. 🚀 Enviamos o pacote para o Java no Render via POST
+  fetch("https://calcados-api.onrender.com/api/produtos", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json", // Avisamos que estamos mandando JSON
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(novoTenis), // Transforma o pacote em texto para a internet
+    body: JSON.stringify(novoTenis), 
   })
     .then((resposta) => {
       if (resposta.ok) {
         alert("✅ Tênis cadastrado com sucesso no Banco de Dados!");
-        formulario.reset(); // Limpa os campos para o próximo cadastro
+        formulario.reset(); 
+        carregarProdutosAdmin(); // Atualiza a lista na hora!
       } else {
         alert("❌ Ops! O Java recusou o cadastro.");
       }
     })
     .catch((erro) => console.error("Erro na comunicação com a API:", erro));
 });
+
 // --- LÓGICA DO DASHBOARD (ESTOQUE ATUAL) ---
 const listaAdmin = document.getElementById("lista-admin-produtos");
 
-// 1. Função que vai no Java e traz todos os produtos
+// 1. 🚀 Função que vai no Java do Render e traz todos os produtos
 function carregarProdutosAdmin() {
-  fetch("http://localhost:8080/api/produtos")
+  fetch("https://calcados-api.onrender.com/api/produtos")
     .then((resposta) => resposta.json())
     .then((produtos) => {
-      listaAdmin.innerHTML = ""; // Limpa a tela antes de desenhar
+      listaAdmin.innerHTML = ""; 
 
       if (produtos.length === 0) {
         listaAdmin.innerHTML =
@@ -60,12 +62,14 @@ function carregarProdutosAdmin() {
         return;
       }
 
-      // Desenha uma linha para cada tênis no banco!
       produtos.forEach((produto) => {
+        // Tratamento rápido para a imagem não quebrar
+        const img = produto.imagemUrl || produto.imagem || "https://via.placeholder.com/150";
+
         listaAdmin.innerHTML += `
                 <div class="admin-item-produto">
                     <div class="admin-item-info">
-                        <img src="${produto.imagemUrl}" alt="${produto.nome}">
+                        <img src="${img}" alt="${produto.nome}" width="80">
                         <div>
                             <strong style="color:#333; font-size:18px;">${produto.nome}</strong><br>
                             <span style="color:#888;">R$ ${produto.preco.toFixed(2)} | Pezinho: ${produto.categoriaFaixaEtaria}</span>
@@ -79,22 +83,20 @@ function carregarProdutosAdmin() {
     .catch((erro) => console.error("Erro ao carregar produtos:", erro));
 }
 
-// 2. A MÁGICA DE APAGAR DO BANCO DE DADOS (DELETE)
+// 2. 🚀 A MÁGICA DE APAGAR DO BANCO DE DADOS (DELETE) NO RENDER
 function excluirProduto(idProduto) {
-  // Uma janelinha de confirmação de segurança (ninguém quer apagar sem querer)
   if (
     confirm(
       "🚨 Tem certeza que deseja excluir este tênis permanentemente do Banco de Dados?",
     )
   ) {
-    // Manda o pedido pro Java dizendo: "Apaga o produto com esse ID aí!"
-    fetch(`http://localhost:8080/api/produtos/${idProduto}`, {
+    fetch(`https://calcados-api.onrender.com/api/produtos/${idProduto}`, {
       method: "DELETE",
     })
       .then((resposta) => {
         if (resposta.ok) {
           alert("✅ Produto excluído com sucesso!");
-          carregarProdutosAdmin(); // Chama a função de novo para o produto sumir da tela!
+          carregarProdutosAdmin(); 
         } else {
           alert("❌ Erro ao excluir o produto. O Java não deixou.");
         }
@@ -103,5 +105,5 @@ function excluirProduto(idProduto) {
   }
 }
 
-// 3. Executa a função para desenhar a lista assim que a página Admin carregar
+// Executa a função logo de cara para ver o que tem no banco
 carregarProdutosAdmin();
