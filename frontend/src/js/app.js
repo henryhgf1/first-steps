@@ -76,7 +76,6 @@ function desenharVitrine(listaParaDesenhar) {
       )
       .join("");
 
-    // CORREÇÃO 2: Usa o operador ?? para evitar erro se preco for null/undefined
     const precoFormatado = (produto.preco ?? 0).toFixed(2);
 
     vitrine.innerHTML += `
@@ -94,7 +93,7 @@ function desenharVitrine(listaParaDesenhar) {
             </div>
 
             <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${precoFormatado}</h2>
-            <span class="badge-idade">Pezinho: ${idade}</span>
+            
             
             <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco ?? 0})">
                 Comprar Agora
