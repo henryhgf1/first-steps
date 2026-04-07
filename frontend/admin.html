@@ -4,8 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painel Admin - Loja</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="src/css/style.css" />
+    <script>
+      (function () {
+        const senha = prompt("Digite a senha de admistrador");
+        if (senha !== "123") {
+          alert("Acesso negado!");
+          window.location.href = "index.html";
+        }
+      })();
+    </script>
   </head>
   <body>
     <h1>Painel do Gerente ⚙️</h1>
@@ -44,7 +56,15 @@
           required
         ></textarea>
 
-        <button type="button" id="btn-cancelar-edicao" class="btn-cancelar" style="display:none;" onclick="cancelarEdicao()">Cancelar Edição</button>
+        <button
+          type="button"
+          id="btn-cancelar-edicao"
+          class="btn-cancelar"
+          style="display: none"
+          onclick="cancelarEdicao()"
+        >
+          Cancelar Edição
+        </button>
 
         <button type="submit" class="btn-salvar">
           <span id="btn-salvar-texto">Salvar Produto no Banco</span>
