@@ -41,4 +41,16 @@ public class ProdutoController {
         if (dadosAtualizados.getCategoriaFaixaEtaria() != null) produto.setCategoriaFaixaEtaria(dadosAtualizados.getCategoriaFaixaEtaria());
         return repository.save(produto);
     }
+
+    @GetMapping(params = "estilo")
+    public List<Produto> filtrarPorEstilo(@RequestParam String estilo) {
+        return repository.findAll().stream()
+                .filter(p -> {
+                    String nome = p.getNome() != null ? p.getNome().toLowerCase() : "";
+                    String desc = p.getDescricao() != null ? p.getDescricao().toLowerCase() : "";
+                    String busca = estilo.toLowerCase();
+                    return nome.contains(busca) || desc.contains(busca);
+                })
+                .toList();
+    }
 }
