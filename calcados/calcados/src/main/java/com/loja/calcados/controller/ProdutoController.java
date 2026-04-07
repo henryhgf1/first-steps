@@ -29,4 +29,16 @@ public class ProdutoController {
     public void deletarProduto(@PathVariable Long id) {
         repository.deleteById(id);
     }
+
+    @PutMapping("/{id}")
+    public Produto atualizarProduto(@PathVariable Long id, @RequestBody Produto dadosAtualizados) {
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        if (dadosAtualizados.getNome() != null) produto.setNome(dadosAtualizados.getNome());
+        if (dadosAtualizados.getDescricao() != null) produto.setDescricao(dadosAtualizados.getDescricao());
+        if (dadosAtualizados.getPreco() != null) produto.setPreco(dadosAtualizados.getPreco());
+        if (dadosAtualizados.getImagemUrl() != null) produto.setImagemUrl(dadosAtualizados.getImagemUrl());
+        if (dadosAtualizados.getCategoriaFaixaEtaria() != null) produto.setCategoriaFaixaEtaria(dadosAtualizados.getCategoriaFaixaEtaria());
+        return repository.save(produto);
+    }
 }

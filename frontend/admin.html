@@ -12,7 +12,8 @@
 
     <div class="card-produto form-container">
       <form id="form-cadastro">
-        <h3>Cadastrar Novo Tênis</h3>
+        <input type="hidden" id="produtoEdicaoId" />
+        <h3 id="titulo-form">Cadastrar Novo Tênis</h3>
 
         <label for="nome">Nome do Produto:</label>
         <input type="text" id="nome" class="input-form" required />
@@ -43,8 +44,10 @@
           required
         ></textarea>
 
+        <button type="button" id="btn-cancelar-edicao" class="btn-cancelar" style="display:none;" onclick="cancelarEdicao()">Cancelar Edição</button>
+
         <button type="submit" class="btn-salvar">
-          Salvar Produto no Banco
+          <span id="btn-salvar-texto">Salvar Produto no Banco</span>
         </button>
       </form>
     </div>
