@@ -9,7 +9,6 @@ let tamanhosSelecionados = {};
 
 async function carregarProdutosDaAPI() {
   try {
-    // 1. 🚀 ANTES de ir na nuvem, desenhamos o Spinner na tela
     vitrine.innerHTML = `
       <div class="loader-container">
         <div class="spinner"></div>
@@ -19,6 +18,12 @@ async function carregarProdutosDaAPI() {
 
     const urlDaSuaAPI = "https://calcados-api.onrender.com/api/produtos";
     const resposta = await fetch(urlDaSuaAPI);
+
+    // CORREÇÃO 1: Verifica se a resposta HTTP foi bem-sucedida antes de parsear
+    if (!resposta.ok) {
+      throw new Error(`Erro HTTP: ${resposta.status}`);
+    }
+
     todosOsProdutos = await resposta.json();
     desenharVitrine(todosOsProdutos);
   } catch (erro) {
@@ -71,6 +76,9 @@ function desenharVitrine(listaParaDesenhar) {
       )
       .join("");
 
+    // CORREÇÃO 2: Usa o operador ?? para evitar erro se preco for null/undefined
+    const precoFormatado = (produto.preco ?? 0).toFixed(2);
+
     vitrine.innerHTML += `
         <div class="card-produto">
             <img src="${imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px; object-fit: cover; aspect-ratio: 4/3;">
@@ -85,10 +93,10 @@ function desenharVitrine(listaParaDesenhar) {
                </div>
             </div>
 
-            <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${produto.preco.toFixed(2)}</h2>
+            <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${precoFormatado}</h2>
             <span class="badge-idade">Pezinho: ${idade}</span>
             
-            <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco})">
+            <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco ?? 0})">
                 Comprar Agora
             </button>
         </div>
@@ -152,10 +160,12 @@ function renderizarListaCarrinho() {
 
   let valorTotal = 0;
   carrinho.forEach((item, index) => {
-    valorTotal += item.preco;
+    // CORREÇÃO 3: Garante que item.preco seja número válido antes de somar
+    const preco = item.preco ?? 0;
+    valorTotal += preco;
     divLista.innerHTML += `
         <div class="item-carrinho">
-            <span>👟 ${item.nome} <b>(Tam: ${item.tamanho})</b> - R$ ${item.preco.toFixed(2)}</span>
+            <span>👟 ${item.nome} <b>(Tam: ${item.tamanho})</b> - R$ ${preco.toFixed(2)}</span>
             <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
         </div>
     `;
@@ -178,8 +188,10 @@ function finalizarCompra() {
   let valorTotal = 0;
 
   carrinho.forEach((item, index) => {
-    mensagem += `${index + 1} - ${item.nome} *(Tamanho: ${item.tamanho})* (R$ ${item.preco.toFixed(2)})\n`;
-    valorTotal += item.preco;
+    // CORREÇÃO 4: Garante que item.preco seja número válido na mensagem do WhatsApp
+    const preco = item.preco ?? 0;
+    mensagem += `${index + 1} - ${item.nome} *(Tamanho: ${item.tamanho})* (R$ ${preco.toFixed(2)})\n`;
+    valorTotal += preco;
   });
 
   mensagem += `\n*Total do Pedido: R$ ${valorTotal.toFixed(2)}*\n`;
