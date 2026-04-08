@@ -10,6 +10,9 @@ public class ProdutoVariacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "produto_id", insertable = false, updatable = false)
+    private Produto produto;
     private String cor;
     private int tamanho;
     private double preco;
@@ -35,6 +38,22 @@ public class ProdutoVariacao {
         } else {
             throw new IllegalArgumentException("Estoque insuficiente para esta numeração.");
         }
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
+    }
+
+    public void setTamanho(int tamanho) {
+        this.tamanho = tamanho;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public void setQuantidadeEstoque(int quantidadeEstoque) {
+        this.quantidadeEstoque = quantidadeEstoque;
     }
 
     public Long getId() {

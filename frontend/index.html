@@ -28,7 +28,16 @@
           Navegue pela nossa linha de calçados infantis meticulosamente
           desenhados para o conforto e o estilo de cada passo.
         </p>
-        <button class="hero-btn">Comprar Agora</button>
+        <button
+          class="hero-btn"
+          onclick="
+            document
+              .getElementById('vitrine-produtos')
+              .scrollIntoView({ behavior: 'smooth' })
+          "
+        >
+          Comprar Agora
+        </button>
 
         <div class="hero-metricas">
           <div class="metrica-item">
@@ -106,6 +115,18 @@
         </div>
       </div>
     </section>
+
+    <button
+      id="btn-ver-todos"
+      style="display: none"
+      onclick="
+        todosOsProdutos = [];
+        desenharVitrine([]);
+        carregarProdutosDaAPI();
+      "
+    >
+      ← Ver todos os produtos
+    </button>
 
     <div id="vitrine-produtos"></div>
 
