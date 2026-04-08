@@ -13,14 +13,12 @@ formulario.addEventListener("submit", function (event) {
   const nome = document.getElementById("nome").value;
   const preco = parseFloat(document.getElementById("preco").value);
   const imagemUrl = document.getElementById("imagemUrl").value;
-  const idade = document.getElementById("idade").value;
   const descricao = document.getElementById("descricao").value;
   const edicaoId = campoEdicaoId.value;
 
   const dados = {
     nome: nome,
     descricao: descricao,
-    categoriaFaixaEtaria: idade,
     preco: preco,
     imagemUrl: imagemUrl,
     variacoes: [
@@ -39,7 +37,11 @@ formulario.addEventListener("submit", function (event) {
   })
     .then((resposta) => {
       if (resposta.ok) {
-        alert(isEdicao ? "✅ Produto atualizado com sucesso!" : "✅ Tênis cadastrado com sucesso!");
+        alert(
+          isEdicao
+            ? "✅ Produto atualizado com sucesso!"
+            : "✅ Tênis cadastrado com sucesso!",
+        );
         formulario.reset();
         campoEdicaoId.value = "";
         resetarFormulario();
@@ -61,7 +63,6 @@ function prepararEdicao(produto) {
   document.getElementById("nome").value = produto.nome;
   document.getElementById("preco").value = produto.preco;
   document.getElementById("imagemUrl").value = produto.imagemUrl || "";
-  document.getElementById("idade").value = produto.categoriaFaixaEtaria;
   document.getElementById("descricao").value = produto.descricao;
   campoEdicaoId.value = produto.id;
 
@@ -80,7 +81,10 @@ function cancelarEdicao() {
 
 function carregarProdutosAdmin() {
   fetch(API_URL)
-    .then((resposta) => resposta.json())
+    .then((resposta) => {
+      if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
+      return resposta.json();
+    })
     .then((produtos) => {
       listaAdmin.innerHTML = "";
 
@@ -95,6 +99,7 @@ function carregarProdutosAdmin() {
           produto.imagemUrl ||
           produto.imagem ||
           "https://via.placeholder.com/150";
+        const preco = produto.preco ?? 0;
 
         listaAdmin.innerHTML += `
           <div class="admin-item-produto">
@@ -102,7 +107,7 @@ function carregarProdutosAdmin() {
               <img src="${img}" alt="${produto.nome}" width="80">
               <div>
                 <strong style="color:#333; font-size:18px;">${produto.nome}</strong><br>
-                <span style="color:#888;">R$ ${produto.preco.toFixed(2)} | Pezinho: ${produto.categoriaFaixaEtaria}</span>
+                <span style="color:#888;">R$ ${preco.toFixed(2)}</span>
               </div>
             </div>
             <div class="admin-acoes">
@@ -117,7 +122,9 @@ function carregarProdutosAdmin() {
 }
 
 function excluirProduto(idProduto) {
-  if (confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")) {
+  if (
+    confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")
+  ) {
     fetch(`${API_URL}/${idProduto}`, { method: "DELETE" })
       .then((resposta) => {
         if (resposta.ok) {

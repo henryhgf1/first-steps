@@ -14,9 +14,25 @@
     <div class="header-loja">
       <h2>👟 MiniPassos</h2>
 
+      <div class="header-busca-central">
+        <input
+          type="text"
+          id="campo-pesquisa"
+          placeholder="🔍 Busque por cor, modelo, tamanho..."
+        />
+      </div>
+
       <div class="carrinho-icone" onclick="abrirModal()">
         🛒 <span id="contador-carrinho">0</span>
       </div>
+    </div>
+
+    <div class="container-pesquisa-mobile">
+      <input
+        type="text"
+        id="campo-pesquisa-mobile"
+        placeholder="🔍 Busque por cor, modelo, tamanho..."
+      />
     </div>
 
     <section class="hero-banner">
@@ -71,42 +87,34 @@
       <span>Calvin Klein</span>
     </div>
 
-    <div class="container-pesquisa">
-      <input
-        type="text"
-        id="campo-pesquisa"
-        placeholder="🔍 Busque por cor, modelo, tamanho..."
-      />
-    </div>
-
     <section class="estilo-container">
       <h2 class="estilo-titulo">Navegue por Estilo</h2>
       <div class="estilo-grid">
-        <div class="estilo-card pequeno">
+        <div class="estilo-card pequeno" onclick="filtrarPorEstilo('casual')">
           <span class="estilo-nome">Casual</span>
           <img
             src="https://i.pinimg.com/control1/1200x/09/02/59/090259a8f9687ad639e8f10ee45a1da1.jpg"
             alt="Estilo Casual Infantil"
           />
         </div>
-
-        <div class="estilo-card grande">
+        <div class="estilo-card grande" onclick="filtrarPorEstilo('esportivo')">
           <span class="estilo-nome">Esportivo</span>
           <img
             src="https://i.pinimg.com/1200x/75/c8/72/75c8723225665e171efafe80e6a34219.jpg"
             alt="Estilo Esportivo Infantil"
           />
         </div>
-
-        <div class="estilo-card grande">
+        <div class="estilo-card grande" onclick="filtrarPorEstilo('social')">
           <span class="estilo-nome">Social</span>
           <img
             src="https://i.pinimg.com/1200x/df/59/11/df591116399b8c4ece28306219acfd4e.jpg"
             alt="Estilo Social Infantil"
           />
         </div>
-
-        <div class="estilo-card pequeno">
+        <div
+          class="estilo-card pequeno"
+          onclick="filtrarPorEstilo('streetwear')"
+        >
           <span class="estilo-nome">Streetwear</span>
           <img
             src="https://i.pinimg.com/736x/c9/39/d7/c939d7d9131e12e30d3933505b396fa4.jpg"
@@ -134,9 +142,7 @@
       <div class="modal-conteudo">
         <span class="fechar-modal" onclick="fecharModal()">&times;</span>
         <h2>Seu Carrinho 🛒</h2>
-
         <div id="lista-itens-carrinho"></div>
-
         <button class="btn-finalizar" onclick="finalizarCompra()">
           Confirmar no WhatsApp
         </button>
@@ -146,5 +152,21 @@
     <div id="toast" class="toast-escondido">Mensagem vai aqui</div>
 
     <script src="./src/js/app.js"></script>
+    <script>
+      const campoPesquisaMobile = document.getElementById(
+        "campo-pesquisa-mobile",
+      );
+      if (campoPesquisaMobile) {
+        campoPesquisaMobile.addEventListener("input", function () {
+          const termo = this.value.toLowerCase();
+          const filtrados = todosOsProdutos.filter((p) => {
+            const nome = p.nome ? p.nome.toLowerCase() : "";
+            const desc = p.descricao ? p.descricao.toLowerCase() : "";
+            return nome.includes(termo) || desc.includes(termo);
+          });
+          desenharVitrine(filtrados);
+        });
+      }
+    </script>
   </body>
 </html>
