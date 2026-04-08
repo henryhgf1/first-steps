@@ -116,6 +116,18 @@
       </div>
     </section>
 
+    <button
+      id="btn-ver-todos"
+      style="display: none"
+      onclick="
+        todosOsProdutos = [];
+        desenharVitrine([]);
+        carregarProdutosDaAPI();
+      "
+    >
+      ← Ver todos os produtos
+    </button>
+
     <div id="vitrine-produtos"></div>
 
     <div id="modal-carrinho" class="modal-escondido">

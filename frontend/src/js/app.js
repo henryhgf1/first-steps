@@ -242,5 +242,23 @@ if (campoPesquisa) {
   });
 }
 
+function filtrarPorEstilo(estilo) {
+  vitrine.innerHTML = `
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <span class="loader-texto">Buscando produtos no estilo ${estilo}...</span>
+      </div>
+    `;
+  fetch(`https://calcados-api.onrender.com/api/produtos?estilo=${estilo}`)
+    .then((r) => r.json())
+    .then((produtos) => {
+      todosOsProdutos = produtos;
+      desenharVitrine(produtos);
+    })
+    .catch(() => {
+      vitrine.innerHTML =
+        "<p style='text-align:center; color:#888;'>Erro ao filtrar produtos.</p>";
+    });
+}
 atualizarContador();
 carregarProdutosDaAPI();
