@@ -1,15 +1,24 @@
 const formulario = document.getElementById("form-cadastro");
+const listaAdmin = document.getElementById("lista-admin-produtos");
+const campoEdicaoId = document.getElementById("produtoEdicaoId");
+const tituloForm = document.getElementById("titulo-form");
+const btnCancelar = document.getElementById("btn-cancelar-edicao");
+const btnSalvarTexto = document.getElementById("btn-salvar-texto");
+
+const API_URL = "https://calcados-api.onrender.com/api/produtos";
+
 formulario.addEventListener("submit", function (event) {
   event.preventDefault();
+
   const nome = document.getElementById("nome").value;
   const preco = parseFloat(document.getElementById("preco").value);
   const imagemUrl = document.getElementById("imagemUrl").value;
-  const idade = document.getElementById("idade").value;
   const descricao = document.getElementById("descricao").value;
-  const novoTenis = {
+  const edicaoId = campoEdicaoId.value;
+
+  const dados = {
     nome: nome,
     descricao: descricao,
-    categoriaFaixaEtaria: idade,
     preco: preco,
     imagemUrl: imagemUrl,
     variacoes: [
@@ -17,17 +26,25 @@ formulario.addEventListener("submit", function (event) {
     ],
   };
 
-  fetch("https://calcados-api.onrender.com/api/produtos", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(novoTenis),
+  const isEdicao = edicaoId !== "";
+  const url = isEdicao ? `${API_URL}/${edicaoId}` : API_URL;
+  const method = isEdicao ? "PUT" : "POST";
+
+  fetch(url, {
+    method: method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
   })
     .then((resposta) => {
       if (resposta.ok) {
-        alert("✅ Tênis cadastrado com sucesso no Banco de Dados!");
+        alert(
+          isEdicao
+            ? "✅ Produto atualizado com sucesso!"
+            : "✅ Tênis cadastrado com sucesso!",
+        );
         formulario.reset();
+        campoEdicaoId.value = "";
+        resetarFormulario();
         carregarProdutosAdmin();
       } else {
         alert("❌ Ops! O Java recusou o cadastro.");
@@ -36,11 +53,38 @@ formulario.addEventListener("submit", function (event) {
     .catch((erro) => console.error("Erro na comunicação com a API:", erro));
 });
 
-const listaAdmin = document.getElementById("lista-admin-produtos");
+function resetarFormulario() {
+  tituloForm.textContent = "Cadastrar Novo Tênis";
+  btnCancelar.style.display = "none";
+  btnSalvarTexto.textContent = "Salvar Produto no Banco";
+}
+
+function prepararEdicao(produto) {
+  document.getElementById("nome").value = produto.nome;
+  document.getElementById("preco").value = produto.preco;
+  document.getElementById("imagemUrl").value = produto.imagemUrl || "";
+  document.getElementById("descricao").value = produto.descricao;
+  campoEdicaoId.value = produto.id;
+
+  tituloForm.textContent = "Editando Produto";
+  btnCancelar.style.display = "block";
+  btnSalvarTexto.textContent = "Atualizar Produto";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function cancelarEdicao() {
+  formulario.reset();
+  campoEdicaoId.value = "";
+  resetarFormulario();
+}
 
 function carregarProdutosAdmin() {
-  fetch("https://calcados-api.onrender.com/api/produtos")
-    .then((resposta) => resposta.json())
+  fetch(API_URL)
+    .then((resposta) => {
+      if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
+      return resposta.json();
+    })
     .then((produtos) => {
       listaAdmin.innerHTML = "";
 
@@ -55,19 +99,23 @@ function carregarProdutosAdmin() {
           produto.imagemUrl ||
           produto.imagem ||
           "https://via.placeholder.com/150";
+        const preco = produto.preco ?? 0;
 
         listaAdmin.innerHTML += `
-                <div class="admin-item-produto">
-                    <div class="admin-item-info">
-                        <img src="${img}" alt="${produto.nome}" width="80">
-                        <div>
-                            <strong style="color:#333; font-size:18px;">${produto.nome}</strong><br>
-                            <span style="color:#888;">R$ ${produto.preco.toFixed(2)} | Pezinho: ${produto.categoriaFaixaEtaria}</span>
-                        </div>
-                    </div>
-                    <button class="btn-excluir-admin" onclick="excluirProduto(${produto.id})">🗑️ Excluir</button>
-                </div>
-            `;
+          <div class="admin-item-produto">
+            <div class="admin-item-info">
+              <img src="${img}" alt="${produto.nome}" width="80">
+              <div>
+                <strong style="color:#333; font-size:18px;">${produto.nome}</strong><br>
+                <span style="color:#888;">R$ ${preco.toFixed(2)}</span>
+              </div>
+            </div>
+            <div class="admin-acoes">
+              <button class="btn-editar-admin" onclick='prepararEdicao(${JSON.stringify(produto)})'>✏️ Editar</button>
+              <button class="btn-excluir-admin" onclick="excluirProduto(${produto.id})">🗑️ Excluir</button>
+            </div>
+          </div>
+        `;
       });
     })
     .catch((erro) => console.error("Erro ao carregar produtos:", erro));
@@ -75,19 +123,16 @@ function carregarProdutosAdmin() {
 
 function excluirProduto(idProduto) {
   if (
-    confirm(
-      "🚨 Tem certeza que deseja excluir este tênis permanentemente do Banco de Dados?",
-    )
+    confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")
   ) {
-    fetch(`https://calcados-api.onrender.com/api/produtos/${idProduto}`, {
-      method: "DELETE",
-    })
+    fetch(`${API_URL}/${idProduto}`, { method: "DELETE" })
       .then((resposta) => {
         if (resposta.ok) {
           alert("✅ Produto excluído com sucesso!");
+          if (campoEdicaoId.value == idProduto) cancelarEdicao();
           carregarProdutosAdmin();
         } else {
-          alert("❌ Erro ao excluir o produto. O Java não deixou.");
+          alert("❌ Erro ao excluir o produto.");
         }
       })
       .catch((erro) => console.error("Erro na exclusão:", erro));
