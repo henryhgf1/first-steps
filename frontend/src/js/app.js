@@ -26,6 +26,8 @@ async function carregarProdutosDaAPI() {
 
     todosOsProdutos = await resposta.json();
     desenharVitrine(todosOsProdutos);
+    const btnVerTodos = document.getElementById("btn-ver-todos");
+    if (btnVerTodos) btnVerTodos.style.display = "none";
   } catch (erro) {
     console.error("Erro ao buscar a API:", erro);
     vitrine.innerHTML =
@@ -53,54 +55,37 @@ function desenharVitrine(listaParaDesenhar) {
     return;
   }
 
-  listaParaDesenhar.forEach((produto) => {
+  const html = listaParaDesenhar.map((produto) => {
     const imagem =
       produto.imagem || produto.imagemUrl || "https://via.placeholder.com/200";
     const desc = produto.descricao || "";
-    const idade = produto.categoriaFaixaEtaria || "Infantil";
 
-    let botaoVerMais = "";
-    if (desc.length > 100) {
-      botaoVerMais = `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`;
-    }
+    const botaoVerMais = desc.length > 100
+      ? `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`
+      : "";
 
     const tamanhosHTML = [20, 21, 22, 23, 24, 25]
-      .map(
-        (tam) => `
-      <button id="btn-tam-${produto.id}-${tam}" 
-              class="btn-tamanho tamanho-btn-${produto.id}" 
-              onclick="escolherTamanho('${produto.id}', '${tam}')">
-        ${tam}
-      </button>
-    `,
-      )
+      .map((tam) => `<button id="btn-tam-${produto.id}-${tam}" class="btn-tamanho tamanho-btn-${produto.id}" onclick="escolherTamanho('${produto.id}', '${tam}')">${tam}</button>`)
       .join("");
 
     const precoFormatado = (produto.preco ?? 0).toFixed(2);
 
-    vitrine.innerHTML += `
-        <div class="card-produto">
-            <img src="${imagem}" alt="${produto.nome}" style="width: 100%; border-radius: 10px; margin-bottom: 15px; object-fit: cover; aspect-ratio: 4/3;">
-            <h3>${produto.nome}</h3>
-            <p class="descricao-produto" id="desc-${produto.id}">${desc}</p>
-            ${botaoVerMais} 
-            
-            <div class="container-tamanhos">
-               <span class="titulo-tamanho">Escolha o tamanho:</span>
-               <div class="grupo-botoes-tamanho">
-                  ${tamanhosHTML}
-               </div>
-            </div>
-
-            <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${precoFormatado}</h2>
-            
-            
-            <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco ?? 0})">
-                Comprar Agora
-            </button>
+    return `
+      <div class="card-produto">
+        <img src="${imagem}" alt="${produto.nome}" loading="lazy" style="width: 100%; border-radius: 10px; margin-bottom: 15px; object-fit: cover; aspect-ratio: 4/3;">
+        <h3>${produto.nome}</h3>
+        <p class="descricao-produto" id="desc-${produto.id}">${desc}</p>
+        ${botaoVerMais}
+        <div class="container-tamanhos">
+          <span class="titulo-tamanho">Escolha o tamanho:</span>
+          <div class="grupo-botoes-tamanho">${tamanhosHTML}</div>
         </div>
-    `;
-  });
+        <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${precoFormatado}</h2>
+        <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco ?? 0})">Comprar Agora</button>
+      </div>`;
+  }).join("");
+
+  vitrine.innerHTML = html;
 }
 
 function tentarComprar(idProduto, nomeProduto, precoProduto) {
@@ -146,6 +131,10 @@ function fecharModal() {
   modal.classList.remove("modal-visivel");
   modal.classList.add("modal-escondido");
 }
+
+modal.addEventListener("click", function (e) {
+  if (e.target === modal) fecharModal();
+});
 
 function renderizarListaCarrinho() {
   const divLista = document.getElementById("lista-itens-carrinho");
@@ -230,17 +219,51 @@ function alternarDescricao(idDescricao, botao) {
   }
 }
 
+function aplicarFiltroTexto(termo) {
+  const t = termo.toLowerCase();
+  const filtrados = todosOsProdutos.filter((produto) => {
+    const nome = produto.nome ? produto.nome.toLowerCase() : "";
+    const desc = produto.descricao ? produto.descricao.toLowerCase() : "";
+    return nome.includes(t) || desc.includes(t);
+  });
+  desenharVitrine(filtrados);
+}
+
 if (campoPesquisa) {
   campoPesquisa.addEventListener("input", function () {
-    const termoPesquisado = campoPesquisa.value.toLowerCase();
-    const produtosFiltrados = todosOsProdutos.filter((produto) => {
-      const nome = produto.nome ? produto.nome.toLowerCase() : "";
-      const desc = produto.descricao ? produto.descricao.toLowerCase() : "";
-      return nome.includes(termoPesquisado) || desc.includes(termoPesquisado);
-    });
-    desenharVitrine(produtosFiltrados);
+    aplicarFiltroTexto(this.value);
   });
 }
 
+const campoPesquisaMobile = document.getElementById("campo-pesquisa-mobile");
+if (campoPesquisaMobile) {
+  campoPesquisaMobile.addEventListener("input", function () {
+    aplicarFiltroTexto(this.value);
+  });
+}
+
+function filtrarPorEstilo(estilo) {
+  vitrine.innerHTML = `
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <span class="loader-texto">Buscando produtos no estilo ${estilo}...</span>
+      </div>
+    `;
+  const btnVerTodos = document.getElementById("btn-ver-todos");
+  fetch(`https://calcados-api.onrender.com/api/produtos?estilo=${estilo}`)
+    .then((r) => {
+      if (!r.ok) throw new Error(`Erro HTTP: ${r.status}`);
+      return r.json();
+    })
+    .then((produtos) => {
+      todosOsProdutos = produtos;
+      desenharVitrine(produtos);
+      if (btnVerTodos) btnVerTodos.style.display = "block";
+    })
+    .catch(() => {
+      vitrine.innerHTML =
+        "<p style='text-align:center; color:#888;'>Erro ao filtrar produtos.</p>";
+    });
+}
 atualizarContador();
 carregarProdutosDaAPI();
