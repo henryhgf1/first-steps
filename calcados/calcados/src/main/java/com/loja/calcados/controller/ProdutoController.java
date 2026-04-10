@@ -39,18 +39,14 @@ public class ProdutoController {
         if (dadosAtualizados.getPreco() != null) produto.setPreco(dadosAtualizados.getPreco());
         if (dadosAtualizados.getImagemUrl() != null) produto.setImagemUrl(dadosAtualizados.getImagemUrl());
         if (dadosAtualizados.getCategoriaFaixaEtaria() != null) produto.setCategoriaFaixaEtaria(dadosAtualizados.getCategoriaFaixaEtaria());
+        if (dadosAtualizados.getEstilo() != null) produto.setEstilo(dadosAtualizados.getEstilo());
         return repository.save(produto);
     }
 
     @GetMapping(params = "estilo")
     public List<Produto> filtrarPorEstilo(@RequestParam String estilo) {
         return repository.findAll().stream()
-                .filter(p -> {
-                    String nome = p.getNome() != null ? p.getNome().toLowerCase() : "";
-                    String desc = p.getDescricao() != null ? p.getDescricao().toLowerCase() : "";
-                    String busca = estilo.toLowerCase();
-                    return nome.contains(busca) || desc.contains(busca);
-                })
+                .filter(p -> estilo.equalsIgnoreCase(p.getEstilo()))
                 .toList();
     }
 }

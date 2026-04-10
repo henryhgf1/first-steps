@@ -14,13 +14,15 @@ formulario.addEventListener("submit", function (event) {
   const preco = parseFloat(document.getElementById("preco").value);
   const imagemUrl = document.getElementById("imagemUrl").value;
   const descricao = document.getElementById("descricao").value;
+  const estilo = document.getElementById("estilo").value;
   const edicaoId = campoEdicaoId.value;
 
   const dados = {
-    nome: nome,
-    descricao: descricao,
-    preco: preco,
-    imagemUrl: imagemUrl,
+    nome,
+    descricao,
+    estilo,
+    preco,
+    imagemUrl,
     variacoes: [
       { cor: "Padrão", tamanho: 20, preco: preco, quantidadeEstoque: 10 },
     ],
@@ -31,17 +33,13 @@ formulario.addEventListener("submit", function (event) {
   const method = isEdicao ? "PUT" : "POST";
 
   fetch(url, {
-    method: method,
+    method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dados),
   })
     .then((resposta) => {
       if (resposta.ok) {
-        alert(
-          isEdicao
-            ? "✅ Produto atualizado com sucesso!"
-            : "✅ Tênis cadastrado com sucesso!",
-        );
+        alert(isEdicao ? "✅ Produto atualizado com sucesso!" : "✅ Tênis cadastrado com sucesso!");
         formulario.reset();
         campoEdicaoId.value = "";
         resetarFormulario();
@@ -63,7 +61,8 @@ function prepararEdicao(produto) {
   document.getElementById("nome").value = produto.nome;
   document.getElementById("preco").value = produto.preco;
   document.getElementById("imagemUrl").value = produto.imagemUrl || "";
-  document.getElementById("descricao").value = produto.descricao;
+  document.getElementById("descricao").value = produto.descricao || "";
+  document.getElementById("estilo").value = produto.estilo || "";
   campoEdicaoId.value = produto.id;
 
   tituloForm.textContent = "Editando Produto";
@@ -94,37 +93,37 @@ function carregarProdutosAdmin() {
         return;
       }
 
-      produtos.forEach((produto) => {
-        const img =
-          produto.imagemUrl ||
-          produto.imagem ||
-          "https://via.placeholder.com/150";
+      const html = produtos.map((produto) => {
+        const img = produto.imagemUrl || produto.imagem || "https://via.placeholder.com/150";
         const preco = produto.preco ?? 0;
+        const estiloBadge = produto.estilo
+          ? `<span class="badge-estilo">${produto.estilo}</span>`
+          : "";
 
-        listaAdmin.innerHTML += `
+        return `
           <div class="admin-item-produto">
             <div class="admin-item-info">
-              <img src="${img}" alt="${produto.nome}" width="80">
+              <img src="${img}" alt="${produto.nome}">
               <div>
-                <strong style="color:#333; font-size:18px;">${produto.nome}</strong><br>
-                <span style="color:#888;">R$ ${preco.toFixed(2)}</span>
+                <strong>${produto.nome}</strong>
+                <span>R$ ${preco.toFixed(2)}</span>
+                ${estiloBadge}
               </div>
             </div>
             <div class="admin-acoes">
               <button class="btn-editar-admin" onclick='prepararEdicao(${JSON.stringify(produto)})'>✏️ Editar</button>
               <button class="btn-excluir-admin" onclick="excluirProduto(${produto.id})">🗑️ Excluir</button>
             </div>
-          </div>
-        `;
-      });
+          </div>`;
+      }).join("");
+
+      listaAdmin.innerHTML = html;
     })
     .catch((erro) => console.error("Erro ao carregar produtos:", erro));
 }
 
 function excluirProduto(idProduto) {
-  if (
-    confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")
-  ) {
+  if (confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")) {
     fetch(`${API_URL}/${idProduto}`, { method: "DELETE" })
       .then((resposta) => {
         if (resposta.ok) {

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="src/css/style.css" />
     <script>
       (function () {
-        const senha = prompt("Digite a senha de admistrador");
+        const senha = prompt("Digite a senha de administrador");
         if (senha !== "123") {
           alert("Acesso negado!");
           window.location.href = "index.html";
@@ -53,6 +53,15 @@
           required
         ></textarea>
 
+        <label for="estilo">Estilo:</label>
+        <select id="estilo" class="input-form" required>
+          <option value="">Selecione um estilo...</option>
+          <option value="casual">Casual</option>
+          <option value="esportivo">Esportivo</option>
+          <option value="social">Social</option>
+          <option value="streetwear">Streetwear</option>
+        </select>
+
         <button
           type="button"
           id="btn-cancelar-edicao"
@@ -68,10 +77,12 @@
         </button>
       </form>
     </div>
+
     <hr class="linha-divisoria-admin" />
     <h2 class="titulo-admin">Estoque Atual 📦</h2>
 
     <div id="lista-admin-produtos" class="container-estoque"></div>
+
     <script src="src/js/admin.js"></script>
   </body>
 </html>

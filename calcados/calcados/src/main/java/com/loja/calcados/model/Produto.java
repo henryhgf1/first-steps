@@ -18,6 +18,7 @@ public class Produto {
     @Column(length = 10000)
     private String descricao;
     private String categoriaFaixaEtaria;
+    private String estilo;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "produto_id")
@@ -32,12 +33,10 @@ public class Produto {
         this.categoriaFaixaEtaria = categoriaFaixaEtaria;
     }
 
-    // Método para adicionar um novo tamanho/cor a este produto
     public void adicionarVariacao(ProdutoVariacao variacao) {
         this.variacoes.add(variacao);
     }
 
-    // Método de negócio: Pegar todas as cores disponíveis
     public List<String> getCoresDisponiveis() {
         List<String> cores = new ArrayList<>();
         for (ProdutoVariacao v : variacoes) {
@@ -48,59 +47,21 @@ public class Produto {
         return cores;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public String getNome() { return nome; }
+    public String getDescricao() { return descricao; }
+    public String getCategoriaFaixaEtaria() { return categoriaFaixaEtaria; }
+    public List<ProdutoVariacao> getVariacoes() { return variacoes; }
+    public Double getPreco() { return preco; }
+    public String getImagemUrl() { return imagemUrl; }
+    public String getEstilo() { return estilo; }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public String getCategoriaFaixaEtaria() {
-        return categoriaFaixaEtaria;
-    }
-
-    public List<ProdutoVariacao> getVariacoes() {
-        return variacoes;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
-
-    public String getImagemUrl() {
-        return imagemUrl;
-    }
-
-    public void setImagemUrl(String imagemUrl) {
-        this.imagemUrl = imagemUrl;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public void setCategoriaFaixaEtaria(String categoriaFaixaEtaria) {
-        this.categoriaFaixaEtaria = categoriaFaixaEtaria;
-    }
-
-    public void setVariacoes(List<ProdutoVariacao> variacoes) {
-        this.variacoes = variacoes;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setPreco(Double preco) { this.preco = preco; }
+    public void setImagemUrl(String imagemUrl) { this.imagemUrl = imagemUrl; }
+    public void setNome(String nome) { this.nome = nome; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setCategoriaFaixaEtaria(String categoriaFaixaEtaria) { this.categoriaFaixaEtaria = categoriaFaixaEtaria; }
+    public void setVariacoes(List<ProdutoVariacao> variacoes) { this.variacoes = variacoes; }
+    public void setEstilo(String estilo) { this.estilo = estilo; }
 }
