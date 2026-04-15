@@ -55,22 +55,29 @@ function desenharVitrine(listaParaDesenhar) {
     return;
   }
 
-  const html = listaParaDesenhar.map((produto) => {
-    const imagem =
-      produto.imagem || produto.imagemUrl || "https://via.placeholder.com/200";
-    const desc = produto.descricao || "";
+  const html = listaParaDesenhar
+    .map((produto) => {
+      const imagem =
+        produto.imagem ||
+        produto.imagemUrl ||
+        "https://via.placeholder.com/200";
+      const desc = produto.descricao || "";
 
-    const botaoVerMais = desc.length > 100
-      ? `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`
-      : "";
+      const botaoVerMais =
+        desc.length > 100
+          ? `<span class="btn-ver-mais" onclick="alternarDescricao('desc-${produto.id}', this)">Ver mais</span>`
+          : "";
 
-    const tamanhosHTML = [20, 21, 22, 23, 24, 25]
-      .map((tam) => `<button id="btn-tam-${produto.id}-${tam}" class="btn-tamanho tamanho-btn-${produto.id}" onclick="escolherTamanho('${produto.id}', '${tam}')">${tam}</button>`)
-      .join("");
+      const tamanhosHTML = [20, 21, 22, 23, 24, 25]
+        .map(
+          (tam) =>
+            `<button id="btn-tam-${produto.id}-${tam}" class="btn-tamanho tamanho-btn-${produto.id}" onclick="escolherTamanho('${produto.id}', '${tam}')">${tam}</button>`,
+        )
+        .join("");
 
-    const precoFormatado = (produto.preco ?? 0).toFixed(2);
+      const precoFormatado = (produto.preco ?? 0).toFixed(2);
 
-    return `
+      return `
       <div class="card-produto">
         <img src="${imagem}" alt="${produto.nome}" loading="lazy" style="width: 100%; border-radius: 10px; margin-bottom: 15px; object-fit: cover; aspect-ratio: 4/3;">
         <h3>${produto.nome}</h3>
@@ -83,7 +90,8 @@ function desenharVitrine(listaParaDesenhar) {
         <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${precoFormatado}</h2>
         <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco ?? 0})">Comprar Agora</button>
       </div>`;
-  }).join("");
+    })
+    .join("");
 
   vitrine.innerHTML = html;
 }
@@ -148,7 +156,6 @@ function renderizarListaCarrinho() {
 
   let valorTotal = 0;
   carrinho.forEach((item, index) => {
-    // CORREÇÃO 3: Garante que item.preco seja número válido antes de somar
     const preco = item.preco ?? 0;
     valorTotal += preco;
     divLista.innerHTML += `
@@ -176,7 +183,6 @@ function finalizarCompra() {
   let valorTotal = 0;
 
   carrinho.forEach((item, index) => {
-    // CORREÇÃO 4: Garante que item.preco seja número válido na mensagem do WhatsApp
     const preco = item.preco ?? 0;
     mensagem += `${index + 1} - ${item.nome} *(Tamanho: ${item.tamanho})* (R$ ${preco.toFixed(2)})\n`;
     valorTotal += preco;
