@@ -39,7 +39,11 @@ formulario.addEventListener("submit", function (event) {
   })
     .then((resposta) => {
       if (resposta.ok) {
-        alert(isEdicao ? "✅ Produto atualizado com sucesso!" : "✅ Tênis cadastrado com sucesso!");
+        alert(
+          isEdicao
+            ? "✅ Produto atualizado com sucesso!"
+            : "✅ Tênis cadastrado com sucesso!",
+        );
         formulario.reset();
         campoEdicaoId.value = "";
         resetarFormulario();
@@ -93,14 +97,18 @@ function carregarProdutosAdmin() {
         return;
       }
 
-      const html = produtos.map((produto) => {
-        const img = produto.imagemUrl || produto.imagem || "https://via.placeholder.com/150";
-        const preco = produto.preco ?? 0;
-        const estiloBadge = produto.estilo
-          ? `<span class="badge-estilo">${produto.estilo}</span>`
-          : "";
+      const html = produtos
+        .map((produto) => {
+          const img =
+            produto.imagemUrl ||
+            produto.imagem ||
+            "https://via.placeholder.com/150";
+          const preco = produto.preco ?? 0;
+          const estiloBadge = produto.estilo
+            ? `<span class="badge-estilo">${produto.estilo}</span>`
+            : "";
 
-        return `
+          return `
           <div class="admin-item-produto">
             <div class="admin-item-info">
               <img src="${img}" alt="${produto.nome}">
@@ -115,7 +123,8 @@ function carregarProdutosAdmin() {
               <button class="btn-excluir-admin" onclick="excluirProduto(${produto.id})">🗑️ Excluir</button>
             </div>
           </div>`;
-      }).join("");
+        })
+        .join("");
 
       listaAdmin.innerHTML = html;
     })
@@ -123,7 +132,9 @@ function carregarProdutosAdmin() {
 }
 
 function excluirProduto(idProduto) {
-  if (confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")) {
+  if (
+    confirm("🚨 Tem certeza que deseja excluir este tênis permanentemente?")
+  ) {
     fetch(`${API_URL}/${idProduto}`, { method: "DELETE" })
       .then((resposta) => {
         if (resposta.ok) {
