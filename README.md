@@ -21,3 +21,15 @@ Variations
 Shopping cart
 Order confirmation through WhatsApp
 Responsive interface for mobile devices
+
+⚙️ Admin Panel
+Add new products
+Edit existing products
+Delete products
+View available products
+Manage:
+Name
+Price
+Image
+Description
+Style
