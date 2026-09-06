@@ -1,3 +1,3 @@
-👟 MiniPassos — Loja de Calçados Infantis
+👟 MiniPassos — Children's Shoe Store
 
-Sistema web de uma loja de calçados infantis desenvolvido com Java + Spring Boot no backend e HTML, CSS e JavaScript no frontend.
+A web application for a children's shoe store, developed with Java + Spring Boot on the backend and HTML, CSS, and JavaScript on the frontend.
