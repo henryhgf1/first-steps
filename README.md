@@ -50,3 +50,37 @@ HTML5
 CSS3
 JavaScript
 Google Fonts — Poppins
+
+📂 Project Structure
+first-steps/
+│
+├── calcados/
+│   └── calcados/
+│       ├── src/
+│       │   ├── main/
+│       │   │   ├── java/
+│       │   │   │   └── com/loja/calcados/
+│       │   │   │       ├── controller/
+│       │   │   │       ├── model/
+│       │   │   │       └── repository/
+│       │   │   │
+│       │   │   └── resources/
+│       │   │       └── application.properties
+│       │   │
+│       │   └── test/
+│       │
+│       ├── pom.xml
+│       └── Dockerfile
+│
+└── frontend/
+    ├── index.html
+    ├── admin.html
+    │
+    └── src/
+        ├── assets/
+        │   └── img/
+        ├── css/
+        │   └── style.css
+        └── js/
+            ├── app.js
+            └── admin.js
