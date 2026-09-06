@@ -33,3 +33,14 @@ Price
 Image
 Description
 Style
+
+🛠️ Technologies
+Backend
+Java 17
+Spring Boot 3.2.4
+Spring Web
+Spring Data JPA
+Hibernate
+PostgreSQL
+H2 Database
+Maven
