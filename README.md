@@ -12,3 +12,12 @@ Browse available products
 Search products by name and description
 Filter products by style
 View product information:
+Name
+Price
+Description
+Image
+Style
+Variations
+Shopping cart
+Order confirmation through WhatsApp
+Responsive interface for mobile devices
