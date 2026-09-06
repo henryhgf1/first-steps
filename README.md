@@ -44,3 +44,9 @@ Hibernate
 PostgreSQL
 H2 Database
 Maven
+
+Frontend
+HTML5
+CSS3
+JavaScript
+Google Fonts — Poppins
