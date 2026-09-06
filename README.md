@@ -84,3 +84,20 @@ first-steps/
         └── js/
             ├── app.js
             └── admin.js
+
+🔌 REST API
+The application provides a REST API for product management.
+Get all products
+GET /api/produtos
+Returns all registered products.
+Create a product
+POST /api/produtos
+Example request:
+{
+  "nome": "Children's Sports Sneakers",
+  "preco": 149.90,
+  "imagemUrl": "src/assets/img/tenis-esportivo-feminino.webp",
+  "descricao": "Comfortable sneakers for sports activities.",
+  "categoriaFaixaEtaria": "Children",
+  "estilo": "sports"
+}
