@@ -56,7 +56,7 @@
   --cor-estilo-nome-texto: #000000;
 }
 
-[data-theme="dark"] {
+[data-theme="escuro"] {
   color-scheme: dark;
 
   /* Fundos e superfícies */
