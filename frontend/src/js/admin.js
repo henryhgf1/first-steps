@@ -7,6 +7,54 @@ const btnSalvarTexto = document.getElementById("btn-salvar-texto");
 
 const API_URL = "https://calcados-api.onrender.com/api/produtos";
 
+const PRECO_MINIMO = 1;
+const PRECO_MAXIMO = 2000;
+const TAMANHO_MINIMO_DESCRICAO = 10;
+const TAMANHO_MINIMO_NOME = 3;
+
+let produtosCadastrados = [];
+
+function validarFormulario(nome, preco, descricao, imagemUrl) {
+  const erros = [];
+
+  if (nome.trim().length < TAMANHO_MINIMO_NOME) {
+    erros.push(
+      `• O nome deve ter pelo menos ${TAMANHO_MINIMO_NOME} caracteres.`,
+    );
+  }
+
+  if (isNaN(preco)) {
+    erros.push("• O preço deve ser um número válido.");
+  } else if (preco < PRECO_MINIMO) {
+    erros.push(`• O preço mínimo é R$ ${PRECO_MINIMO.toFixed(2)}.`);
+  } else if (preco > PRECO_MAXIMO) {
+    erros.push(
+      `• O preço máximo é R$ ${PRECO_MAXIMO.toFixed(2)} — valor fora do comum para calçado infantil.`,
+    );
+  }
+
+  if (descricao.trim().length < TAMANHO_MINIMO_DESCRICAO) {
+    erros.push(
+      `• A descrição deve ter pelo menos ${TAMANHO_MINIMO_DESCRICAO} caracteres.`,
+    );
+  }
+
+  if (imagemUrl.trim() === "") {
+    erros.push("• Informe a URL ou o caminho da imagem.");
+  }
+
+  return erros;
+}
+
+function verificarNomeDuplicado(nome, idEmEdicao) {
+  const nomeNormalizado = nome.trim().toLowerCase();
+  return produtosCadastrados.find(
+    (produto) =>
+      produto.nome.trim().toLowerCase() === nomeNormalizado &&
+      String(produto.id) !== String(idEmEdicao),
+  );
+}
+
 formulario.addEventListener("submit", function (event) {
   event.preventDefault();
 
@@ -16,6 +64,22 @@ formulario.addEventListener("submit", function (event) {
   const descricao = document.getElementById("descricao").value;
   const estilo = document.getElementById("estilo").value;
   const edicaoId = campoEdicaoId.value;
+
+  const erros = validarFormulario(nome, preco, descricao, imagemUrl);
+  if (erros.length > 0) {
+    alert("❌ Corrija os problemas antes de salvar:\n\n" + erros.join("\n"));
+    return;
+  }
+
+  const duplicado = verificarNomeDuplicado(nome, edicaoId);
+  if (
+    duplicado &&
+    !confirm(
+      `⚠️ Já existe um produto chamado "${nome}" (ID ${duplicado.id}) no banco de dados.\n\nSalvar mesmo assim?`,
+    )
+  ) {
+    return;
+  }
 
   const dados = {
     nome,
@@ -89,6 +153,7 @@ function carregarProdutosAdmin() {
       return resposta.json();
     })
     .then((produtos) => {
+      produtosCadastrados = produtos;
       listaAdmin.innerHTML = "";
 
       if (produtos.length === 0) {
