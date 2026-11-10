@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configurações - MiniPassos</title>
+    <script>
+      (function () {
+        var tema = localStorage.getItem("tema");
+        if (tema !== "claro" && tema !== "escuro") {
+          tema = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "escuro"
+            : "claro";
+        }
+        document.documentElement.setAttribute("data-theme", tema);
+      })();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/css/style.css" />
+  </head>
+  <body>
+    <div class="header-loja">
+      <h2>⚙️ Configurações</h2>
+      <a class="link-voltar" href="index.html">← Voltar à loja</a>
+    </div>
+
+    <div class="form-container">
+      <h3>Aparência</h3>
+      <p class="config-descricao">
+        Escolha o tema da loja. No modo automático, seguimos a preferência do
+        seu sistema operacional.
+      </p>
+
+      <div class="config-opcoes" id="opcoes-tema">
+        <button type="button" class="config-opcao" data-tema="claro">
+          <span class="config-opcao-icone">☀️</span>
+          <span>
+            Tema Claro
+            <small>O visual padrão da loja.</small>
+          </span>
+        </button>
+        <button type="button" class="config-opcao" data-tema="escuro">
+          <span class="config-opcao-icone">🌙</span>
+          <span>
+            Tema Escuro
+            <small>Azul-petróleo profundo, suave para os olhos.</small>
+          </span>
+        </button>
+        <button type="button" class="config-opcao" data-tema="auto">
+          <span class="config-opcao-icone">🖥️</span>
+          <span>
+            Automático
+            <small>Segue o tema do seu sistema operacional.</small>
+          </span>
+        </button>
+      </div>
+
+      <p class="config-aviso" id="aviso-tema" style="display: none">
+        ✅ Preferência salva!
+      </p>
+    </div>
+
+    <script src="./src/js/theme.js"></script>
+  </body>
+</html>

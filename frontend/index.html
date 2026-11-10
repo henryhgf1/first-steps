@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loja de Calçados Infantis</title>
+    <script>
+      (function () {
+        var tema = localStorage.getItem("tema");
+        if (tema !== "claro" && tema !== "escuro") {
+          tema = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "escuro"
+            : "claro";
+        }
+        document.documentElement.setAttribute("data-theme", tema);
+      })();
+    </script>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -21,6 +32,14 @@
           placeholder="🔍 Busque por cor, modelo, tamanho..."
         />
       </div>
+
+      <a
+        class="config-icone"
+        href="configuracoes.html"
+        title="Configurações"
+        aria-label="Abrir configurações"
+        >⚙️</a
+      >
 
       <div class="carrinho-icone" onclick="abrirModal()">
         🛒 <span id="contador-carrinho">0</span>

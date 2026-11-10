@@ -12,7 +12,7 @@ async function carregarProdutosDaAPI() {
     vitrine.innerHTML = `
       <div class="loader-container">
         <div class="spinner"></div>
-        <span class="loader-texto">Arrumando as prateleiras e buscando os tênis na nuvem... ☁️👟<br><small style="font-size: 12px; color: #94A3B8;">Isso pode levar alguns segundos no primeiro acesso do dia.</small></span>
+        <span class="loader-texto">Arrumando as prateleiras e buscando os tênis na nuvem... ☁️👟<br><small class="loader-subtexto">Isso pode levar alguns segundos no primeiro acesso do dia.</small></span>
       </div>
     `;
 
@@ -31,7 +31,7 @@ async function carregarProdutosDaAPI() {
   } catch (erro) {
     console.error("Erro ao buscar a API:", erro);
     vitrine.innerHTML =
-      "<p style='text-align:center; color:#888;'>Erro ao carregar a vitrine. O servidor está online?</p>";
+      "<p class='mensagem-vazia'>Erro ao carregar a vitrine. O servidor está online?</p>";
   }
 }
 
@@ -51,7 +51,7 @@ function desenharVitrine(listaParaDesenhar) {
   vitrine.innerHTML = "";
 
   if (listaParaDesenhar.length === 0) {
-    vitrine.innerHTML = `<p style='text-align:center; width:100%; color:#888; font-size: 18px; margin-top: 50px;'>Nenhum tênis encontrado. 😢</p>`;
+    vitrine.innerHTML = `<p class='mensagem-vazia'>Nenhum tênis encontrado. 😢</p>`;
     return;
   }
 
@@ -87,7 +87,7 @@ function desenharVitrine(listaParaDesenhar) {
           <span class="titulo-tamanho">Escolha o tamanho:</span>
           <div class="grupo-botoes-tamanho">${tamanhosHTML}</div>
         </div>
-        <h2 style="color: #ff6b6b; margin-top: 5px;">R$ ${precoFormatado}</h2>
+        <h2 class="preco-produto">R$ ${precoFormatado}</h2>
         <button class="btn-comprar" onclick="tentarComprar('${produto.id}', '${produto.nome}', ${produto.preco ?? 0})">Comprar Agora</button>
       </div>`;
     })
@@ -150,7 +150,7 @@ function renderizarListaCarrinho() {
 
   if (carrinho.length === 0) {
     divLista.innerHTML =
-      "<p style='text-align:center; color:#888;'>Seu carrinho está vazio.</p>";
+      "<p class='mensagem-vazia' style='margin-top: 0;'>Seu carrinho está vazio.</p>";
     return;
   }
 
@@ -167,8 +167,8 @@ function renderizarListaCarrinho() {
   });
 
   divLista.innerHTML += `
-    <div style="text-align: right; margin-top: 20px; font-size: 18px; color: #333; border-top: 2px dashed #eee; padding-top: 15px;">
-        <strong>Total a pagar: <span style="color: #10B981;">R$ ${valorTotal.toFixed(2)}</span></strong>
+    <div class="carrinho-total">
+        <strong>Total a pagar: <span class="carrinho-total-valor">R$ ${valorTotal.toFixed(2)}</span></strong>
     </div>
   `;
 }
@@ -268,7 +268,7 @@ function filtrarPorEstilo(estilo) {
     })
     .catch(() => {
       vitrine.innerHTML =
-        "<p style='text-align:center; color:#888;'>Erro ao filtrar produtos.</p>";
+        "<p class='mensagem-vazia'>Erro ao filtrar produtos.</p>";
     });
 }
 atualizarContador();
