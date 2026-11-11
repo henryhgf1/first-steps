@@ -217,6 +217,7 @@ h1 {
   top: 10px;
   z-index: 100;
   gap: 20px;
+  transition: padding 0.3s ease;
 }
 
 .header-loja h2 {
@@ -229,6 +230,9 @@ h1 {
 .header-busca-central {
   flex: 1;
   max-width: 480px;
+  min-width: 0;
+  overflow: hidden;
+  transition: max-width 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
 }
 
 .header-busca-central input {
@@ -248,7 +252,23 @@ h1 {
 .header-busca-central input:focus {
   border-color: var(--cor-acento);
   background-color: var(--cor-card);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.14),
+    0 4px 14px rgba(99, 102, 241, 0.12);
+}
+
+/* ── HEADER COMPACTO AO ROLAR ──
+   Ao descer a página, a barra de busca recolhe suavemente
+   e sobra só o logotipo + ícones (para não sobrepor o conteúdo). */
+.header-loja.compacta {
+  padding: 8px 24px;
+}
+
+.header-loja.compacta .header-busca-central {
+  flex: 0 0 0;
+  max-width: 0;
+  opacity: 0;
+  margin: 0 -10px; /* cancela um dos espaçamentos de 20px do flex */
 }
 
 .container-pesquisa-mobile {
@@ -682,6 +702,10 @@ h1 {
   text-align: left;
 }
 
+.destaque-titulo {
+  color: var(--cor-acento);
+}
+
 .hero-subtitulo {
   color: var(--cor-hero-texto);
   font-size: 1rem;
@@ -699,7 +723,7 @@ h1 {
   cursor: pointer;
   font-weight: 500;
   margin-bottom: 40px;
-  transition: background 0.3s;
+  transition: background 0.3s, box-shadow 0.3s, color 0.3s;
 }
 
 .hero-btn:hover {
@@ -1112,4 +1136,92 @@ body,
   font-weight: 600;
   margin-top: 20px;
   margin-bottom: 0;
+}
+
+/* ── HERO NO TEMA ESCURO ──
+   Fundo em degradê azul profundo com brilho indigo, foto em
+   destaque com moldura luminosa, decoracoes flutuantes e
+   botao indigo com brilho. O tema claro nao e afetado. */
+[data-theme="escuro"] .hero-banner {
+  position: relative;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 55%, #1a2540 100%);
+  overflow: hidden;
+}
+
+[data-theme="escuro"] .hero-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 50%, rgba(99, 102, 241, 0.32) 0%, transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.12) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+[data-theme="escuro"] .hero-banner::after {
+  content: "👟";
+  position: absolute;
+  top: 7%;
+  right: 4%;
+  font-size: 2.4rem;
+  animation: flutuar 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+[data-theme="escuro"] .hero-imagem {
+  position: relative;
+}
+
+[data-theme="escuro"] .hero-imagem::after {
+  content: "✨";
+  position: absolute;
+  top: -10px;
+  left: 4%;
+  font-size: 1.9rem;
+  animation: flutuar 4s ease-in-out infinite 0.6s;
+  pointer-events: none;
+}
+
+[data-theme="escuro"] .hero-imagem img {
+  border-radius: 28px;
+  border: 2px solid rgba(129, 140, 248, 0.28);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 45px rgba(99, 102, 241, 0.18);
+  animation: balancar 5.5s ease-in-out infinite;
+}
+
+[data-theme="escuro"] .hero-btn {
+  background-color: var(--cor-acento);
+  color: #0f172a;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.45);
+}
+
+[data-theme="escuro"] .hero-btn:hover {
+  background-color: #a5b4fc;
+  box-shadow: 0 14px 38px rgba(129, 140, 248, 0.6);
+}
+
+[data-theme="escuro"] .metrica-item strong {
+  color: var(--cor-acento);
+}
+
+@keyframes flutuar {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(8deg);
+  }
+}
+
+@keyframes balancar {
+  0%,
+  100% {
+    transform: rotate(-1.2deg);
+  }
+  50% {
+    transform: rotate(1.2deg);
+  }
 }

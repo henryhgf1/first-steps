@@ -7,6 +7,20 @@ let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
 let tamanhosSelecionados = {};
 
+// Header compacto ao rolar: a busca recolhe suavemente e sobra
+// só o logotipo + ícones, para não sobrepor o conteúdo da página.
+const headerLoja = document.querySelector(".header-loja");
+
+if (headerLoja && campoPesquisa) {
+  window.addEventListener(
+    "scroll",
+    () => {
+      headerLoja.classList.toggle("compacta", window.scrollY > 80);
+    },
+    { passive: true },
+  );
+}
+
 async function carregarProdutosDaAPI() {
   try {
     vitrine.innerHTML = `
